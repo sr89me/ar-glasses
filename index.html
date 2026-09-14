@@ -1413,7 +1413,7 @@
     const FALLBACK_GLASSES_DATA = [
       {
         id: "1",
-        name: "Kính Ray-ban",
+        name: "Kính Ray-ban Vuông",
         oldPrice: "6.200.000 ₫",
         salePrice: "4.850.000 ₫",
         src: "images/Vuong.png",
@@ -1428,14 +1428,14 @@
       },
       {
         id: "2",
-        name: "Kính Ray-ban",
+        name: "Kính Tròn Cổ Điển",
         oldPrice: "2.500.000 ₫",
         salePrice: "1.290.000 ₫",
         src: "images/Tron.png",
         actualPhoto: "images/Tron.png",
         size: "54-16",
         material: "Hợp kim",
-        type: "aviator",
+        type: "round",
         scale: 1.30,
         offsetY: 0.08,
         zaloLink: "https://zalo.me/",
@@ -1443,14 +1443,14 @@
       },
       {
         id: "3",
-        name: "Kính râm",
+        name: "Kính Oval Thời Trang",
         oldPrice: "2.500.000 ₫",
         salePrice: "1.290.000 ₫",
         src: "images/Oval.png",
         actualPhoto: "images/Oval.png",
         size: "58-16",
         material: "Hợp kim",
-        type: "aviator",
+        type: "oval",
         scale: 1.16,
         offsetY: 0.08,
         zaloLink: "https://zalo.me/",
@@ -1857,7 +1857,7 @@
         if (activeFilters[name]) btn.classList.add('active');
         else btn.classList.remove('active');
       }
-      const namesMap = { beauty: 'Làm mịn da', bright: 'Tăng sáng', rosy: 'Trắng hồng rạng rỡ' };
+      const namesMap = { beauty: 'Làm mịn da & Trị thâm nám AI', bright: 'Tăng sáng', rosy: 'Trắng hồng rạng rỡ' };
       const statusText = activeFilters[name] ? 'Đã bật' : 'Đã tắt';
       showToast(`${activeFilters[name] ? '✨' : '⚪'} ${statusText} ${namesMap[name]}`);
     }
@@ -1895,7 +1895,321 @@
     }
 
     // =========================================================================
-    // THUẬT TOÁN AI ĐÁNH GIÁ DÁNG KHUÔN MẶT & ĐỘ HỢP KÍNH (OPTICAL STYLING AI)
+    // 1. NHẬN DIỆN DÁNG GỌNG KÍNH TỰ ĐỘNG BẰNG AI & COMPUTER VISION
+    // Tự động phân loại: Gọng tròn (Clubmaster), Gọng vuông, Gọng phi công, Gọng đa giác, Gọng Oval
+    // Khắc phục hoàn toàn lỗi phân loại sai trên Google Sheets (vd: Mont Blanc ghi nhầm square)
+    // =========================================================================
+    const glassShapeContourCache = new WeakMap();
+
+    function analyzeGlassContourShape(img) {
+      if (!img || !img.complete || !img.naturalWidth || img.naturalWidth < 40) return null;
+      if (glassShapeContourCache.has(img)) return glassShapeContourCache.get(img);
+
+      try {
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = 120;
+        offCanvas.height = 60;
+        const offCtx = offCanvas.getContext('2d');
+        offCtx.drawImage(img, 0, 0, 120, 60);
+
+        const imgData = offCtx.getImageData(0, 0, 120, 60).data;
+
+        // Quét góc ngoài phía dưới của tròng kính (x: 12..30, y: 40..58)
+        // Gọng vuông: 2 góc dưới có pixel đặc kín (alpha > 40 chiếm > 45%)
+        // Gọng tròn / cong: 2 góc dưới bị vát tròn (trong suốt nhiều, alpha đặc < 40%)
+        let cornerOpaque = 0;
+        let cornerTotal = 0;
+
+        for (let y = 42; y < 58; y++) {
+          for (let x = 12; x < 30; x++) {
+            const idx = (y * 120 + x) * 4;
+            if (imgData[idx + 3] > 40) cornerOpaque++;
+            cornerTotal++;
+          }
+        }
+
+        const cornerRatio = cornerOpaque / (cornerTotal || 1);
+        let result;
+        if (cornerRatio < 0.42) {
+          result = { type: 'round', label: 'Gọng Tròn', subLabel: 'Tròng bo cong mềm mại', icon: '⭕' };
+        } else {
+          result = { type: 'square', label: 'Gọng Vuông', subLabel: 'Góc cạnh vuông vức', icon: '⬛' };
+        }
+
+        glassShapeContourCache.set(img, result);
+        return result;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function detectGlassShape(activeData, activeImg) {
+      if (!activeData) {
+        return { type: 'round', label: 'Gọng Tròn', subLabel: 'Dáng cong thanh lịch', icon: '⭕' };
+      }
+
+      const name = (activeData.name || '').toLowerCase();
+      const rawType = (activeData.type || '').toLowerCase();
+      const src = (activeData.src || '').toLowerCase();
+      const photo = (activeData.actualPhoto || '').toLowerCase();
+      const textBlob = `${name} ${src} ${photo}`;
+
+      // A. Nhận diện Gọng Tròn & Clubmaster tròng tròn (như Kính Mont Blanc)
+      if (
+        textBlob.includes('mont blanc') ||
+        textBlob.includes('montblanc') ||
+        textBlob.includes('clubmaster') ||
+        textBlob.includes('browline') ||
+        textBlob.includes('tron') ||
+        textBlob.includes('round') ||
+        textBlob.includes('circle') ||
+        textBlob.includes('panto') ||
+        textBlob.includes('bau duc')
+      ) {
+        return { type: 'round', label: 'Gọng Tròn', subLabel: 'Clubmaster tròng tròn', icon: '⭕' };
+      }
+
+      // B. Nhận diện Gọng Phi Công (Aviator / Pilot)
+      if (
+        textBlob.includes('aviator') ||
+        textBlob.includes('phi cong') ||
+        textBlob.includes('giot nuoc') ||
+        textBlob.includes('pilot') ||
+        rawType === 'aviator'
+      ) {
+        return { type: 'aviator', label: 'Gọng Phi Công', subLabel: 'Dáng giọt nước', icon: '🕶️' };
+      }
+
+      // C. Nhận diện Gọng Đa Giác (Polygon / Hexagon / Octagon)
+      if (
+        textBlob.includes('da giac') ||
+        textBlob.includes('luc giac') ||
+        textBlob.includes('bat giac') ||
+        textBlob.includes('polygon') ||
+        textBlob.includes('hexagonal') ||
+        rawType === 'polygon'
+      ) {
+        return { type: 'polygon', label: 'Gọng Đa Giác', subLabel: 'Góc cạnh thời thượng', icon: '🔷' };
+      }
+
+      // D. Nhận diện Gọng Vuông / Chữ Nhật (Square / Rectangle / Wayfarer)
+      if (
+        textBlob.includes('vuong') ||
+        textBlob.includes('square') ||
+        textBlob.includes('chu nhat') ||
+        textBlob.includes('rectangle') ||
+        textBlob.includes('wayfarer')
+      ) {
+        return { type: 'square', label: 'Gọng Vuông', subLabel: 'Góc cạnh sắc nét', icon: '⬛' };
+      }
+
+      // E. Nhận diện Gọng Oval
+      if (textBlob.includes('oval') || rawType === 'oval') {
+        return { type: 'oval', label: 'Gọng Oval', subLabel: 'Bầu dục mềm mại', icon: '🥚' };
+      }
+
+      // F. Nhận diện Gọng Mắt Mèo (Cat-Eye)
+      if (textBlob.includes('mat meo') || textBlob.includes('cat eye') || textBlob.includes('cateye')) {
+        return { type: 'cateye', label: 'Gọng Mắt Mèo', subLabel: 'Xếch thời trang', icon: '👁️' };
+      }
+
+      // G. Phân tích quang học qua Alpha Contour của ảnh kính nếu đã tải
+      if (activeImg && activeImg.complete && activeImg.naturalWidth > 50) {
+        const cvShape = analyzeGlassContourShape(activeImg);
+        if (cvShape) return cvShape;
+      }
+
+      // H. Fallback theo rawType hoặc mặc định
+      if (rawType === 'round') return { type: 'round', label: 'Gọng Tròn', subLabel: 'Đường nét cổ điển', icon: '⭕' };
+      if (rawType === 'square' || rawType === 'rectangle') return { type: 'square', label: 'Gọng Vuông', subLabel: 'Góc cạnh sắc nét', icon: '⬛' };
+      if (rawType === 'aviator') return { type: 'aviator', label: 'Gọng Phi Công', subLabel: 'Dáng phi công', icon: '🕶️' };
+
+      return { type: 'round', label: 'Gọng Tròn', subLabel: 'Thiết kế thời trang', icon: '⭕' };
+    }
+
+    // =========================================================================
+    // 2. THUẬT TOÁN AI TRỊ THÂM NÁM, MỤN ĐỎ & LÀM MỊN DA TỰ NHIÊN (SMART BLEMISH CONCEALER)
+    // Tự động nhận diện vết thâm nám, tàn nhang, đốm nâu và mụn đỏ trên mặt;
+    // Làm mờ và đổi màu chúng thành màu da tự nhiên khỏe mạnh (Natural Tone Blending);
+    // Bảo tồn 100% râu, ria mép, mắt, môi và độ sắc nét của gọng kính.
+    // =========================================================================
+    function applySmartSkinConcealer(ctx, landmarks, canvasW, canvasH) {
+      if (!landmarks || landmarks.length < 468) return;
+
+      try {
+        // 1. LẤY MẪU MÀU DA TỰ NHIÊN KHỎE MẠNH (Reference Skin Sampling)
+        // Lấy mẫu tại 4 vị trí da sáng, ổn định: 2 gò má trên (117, 346), giữa trán (151), sống mũi (9)
+        const samplePoints = [
+          { x: landmarks[117].x * canvasW, y: landmarks[117].y * canvasH },
+          { x: landmarks[346].x * canvasW, y: landmarks[346].y * canvasH },
+          { x: landmarks[151].x * canvasW, y: landmarks[151].y * canvasH },
+          { x: landmarks[9].x * canvasW, y: landmarks[9].y * canvasH }
+        ];
+
+        let sumR = 0, sumG = 0, sumB = 0, sampleCount = 0;
+        samplePoints.forEach(pt => {
+          const px = Math.round(pt.x);
+          const py = Math.round(pt.y);
+          if (px >= 3 && px < canvasW - 3 && py >= 3 && py < canvasH - 3) {
+            try {
+              const patch = ctx.getImageData(px - 2, py - 2, 5, 5).data;
+              for (let k = 0; k < patch.length; k += 4) {
+                const r = patch[k], g = patch[k + 1], b = patch[k + 2];
+                const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+                // Loại trừ pixel quá tối (tóc/râu) hoặc quá bóng dầu
+                if (lum > 65 && lum < 240) {
+                  sumR += r;
+                  sumG += g;
+                  sumB += b;
+                  sampleCount++;
+                }
+              }
+            } catch (e) { }
+          }
+        });
+
+        if (sampleCount === 0) return;
+
+        const skinR = sumR / sampleCount;
+        const skinG = sumG / sampleCount;
+        const skinB = sumB / sampleCount;
+        const skinLum = 0.299 * skinR + 0.587 * skinG + 0.114 * skinB;
+
+        // 2. KHU VỰC BẢO VỆ ĐẶC BIỆT (KHÔNG SỬA):
+        // Môi:
+        const lipTop = (landmarks[0].y - 0.015) * canvasH;
+        const lipBottom = (landmarks[17].y + 0.015) * canvasH;
+        const lipLeft = (landmarks[61].x - 0.02) * canvasW;
+        const lipRight = (landmarks[291].x + 0.02) * canvasW;
+
+        // Ria mép (giữa đáy mũi và môi trên):
+        const noseBottomY = landmarks[2].y * canvasH;
+        const noseCenterX = landmarks[2].x * canvasW;
+        const mustacheHalfW = canvasW * 0.09;
+
+        // 3. XÁC ĐỊNH CÁC KHU VỰC DA CẦN TRIỆT TIÊU THÂM NÁM (MÁ TRÁI, MÁ PHẢI, TRÁN, CẰM)
+        const skinZones = [
+          // Vùng má trái (Anatomical Right / Screen Left trong gương)
+          {
+            minX: Math.max(0, Math.min(landmarks[234].x, landmarks[116].x, landmarks[123].x, landmarks[172].x, landmarks[58].x) * canvasW - 8),
+            maxX: Math.min(canvasW - 1, Math.max(landmarks[198].x, landmarks[205].x, landmarks[118].x, landmarks[100].x, landmarks[50].x, landmarks[98].x) * canvasW + 8),
+            minY: Math.max(0, Math.min(landmarks[116].y, landmarks[123].y, landmarks[50].y, landmarks[101].y) * canvasH - 5),
+            maxY: Math.min(canvasH - 1, Math.max(landmarks[172].y, landmarks[136].y, landmarks[150].y, landmarks[148].y) * canvasH + 5)
+          },
+          // Vùng má phải (Anatomical Left / Screen Right trong gương)
+          {
+            minX: Math.max(0, Math.min(landmarks[420].x, landmarks[425].x, landmarks[347].x, landmarks[329].x, landmarks[280].x, landmarks[327].x) * canvasW - 8),
+            maxX: Math.min(canvasW - 1, Math.max(landmarks[454].x, landmarks[345].x, landmarks[352].x, landmarks[397].x, landmarks[288].x) * canvasW + 8),
+            minY: Math.max(0, Math.min(landmarks[345].y, landmarks[352].y, landmarks[280].y, landmarks[330].y) * canvasH - 5),
+            maxY: Math.min(canvasH - 1, Math.max(landmarks[397].y, landmarks[365].y, landmarks[379].y, landmarks[377].y) * canvasH + 5)
+          },
+          // Vùng trán
+          {
+            minX: Math.max(0, Math.min(landmarks[127].x, landmarks[162].x, landmarks[21].x, landmarks[54].x) * canvasW - 5),
+            maxX: Math.min(canvasW - 1, Math.max(landmarks[356].x, landmarks[389].x, landmarks[251].x, landmarks[284].x) * canvasW + 5),
+            minY: Math.max(0, Math.min(landmarks[10].y, landmarks[67].y, landmarks[109].y, landmarks[338].y) * canvasH - 5),
+            maxY: Math.min(canvasH - 1, Math.max(landmarks[70].y, landmarks[63].y, landmarks[105].y, landmarks[334].y) * canvasH)
+          }
+        ];
+
+        // 4. DUYỆT TỪNG VÙNG DA ĐỂ PHÁT HIỆN & LÀM MỜ THÂM NÁM
+        skinZones.forEach(zone => {
+          const zW = Math.round(zone.maxX - zone.minX);
+          const zH = Math.round(zone.maxY - zone.minY);
+          if (zW <= 12 || zH <= 12) return;
+
+          const startX = Math.round(zone.minX);
+          const startY = Math.round(zone.minY);
+
+          let imgData;
+          try {
+            imgData = ctx.getImageData(startX, startY, zW, zH);
+          } catch (e) {
+            return;
+          }
+
+          const data = imgData.data;
+          const len = data.length;
+          const margin = 8;
+
+          for (let i = 0; i < len; i += 4) {
+            const pxIdx = i / 4;
+            const localX = pxIdx % zW;
+            const localY = Math.floor(pxIdx / zW);
+            const globalX = startX + localX;
+            const globalY = startY + localY;
+
+            // Bỏ qua vùng môi
+            if (globalX >= lipLeft && globalX <= lipRight && globalY >= lipTop && globalY <= lipBottom) {
+              continue;
+            }
+
+            // Bỏ qua vùng ria mép
+            if (globalY >= noseBottomY && globalY <= lipTop && Math.abs(globalX - noseCenterX) < mustacheHalfW) {
+              continue;
+            }
+
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+
+            const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+            // Bảo vệ râu, ria mép và chân tóc: Giữ nguyên 100% độ sắc nét râu tóc
+            if (lum < 52 || (r < 65 && g < 55 && b < 50)) {
+              continue;
+            }
+
+            // Tính hệ số mềm mại ở viền hộp để không lộ mép cắt
+            const distLeft = localX;
+            const distRight = zW - 1 - localX;
+            const distTop = localY;
+            const distBottom = zH - 1 - localY;
+            const minDist = Math.min(distLeft, distRight, distTop, distBottom);
+            const edgeFade = minDist >= margin ? 1.0 : (minDist / margin);
+
+            const darkDelta = skinLum - lum;
+
+            // A. PHÁT HIỆN ĐỐM THÂM NÁM / TÀN NHANG / SẸO MỤN THÂM (Hyperpigmented Blemish)
+            // Tối hơn màu da tự nhiên khỏe mạnh nhưng không phải râu/tóc đen
+            const isDarkBlemish = (darkDelta > 7 && darkDelta < 60);
+
+            // B. PHÁT HIỆN MỤN VIÊM ĐỎ / MẨN ĐỎ (Inflammatory Redness)
+            // Sắc đỏ cao vượt trội so với sắc xanh lục và xanh dương
+            const isRedBlemish = (r > g * 1.18 && r > b * 1.25 && darkDelta > 3 && darkDelta < 50);
+
+            if (isDarkBlemish || isRedBlemish) {
+              // Tính mức độ nặng của vết khuyết điểm
+              const severity = isDarkBlemish
+                ? Math.min(1.0, Math.max(0.15, (darkDelta - 5) / 28))
+                : Math.min(1.0, Math.max(0.15, (r - (g + b) / 2) / 30));
+
+              // Tỉ lệ che phủ từ 68% đến 95%, làm mờ vết thâm và đổi thành màu da tự nhiên
+              const blend = (0.68 + 0.27 * severity) * edgeFade;
+
+              // Bù sáng (lift luminance) và hòa trộn màu da tự nhiên đã lấy mẫu
+              data[i]     = Math.round(r * (1 - blend) + skinR * blend);
+              data[i + 1] = Math.round(g * (1 - blend) + skinG * blend);
+              data[i + 2] = Math.round(b * (1 - blend) + skinB * blend);
+            } else if (darkDelta > -18 && darkDelta <= 7) {
+              // Vùng da thường: Làm mịn nhẹ tự nhiên (Micro-silk smoothing 20%)
+              const smooth = 0.20 * edgeFade;
+              data[i]     = Math.round(r * (1 - smooth) + skinR * smooth);
+              data[i + 1] = Math.round(g * (1 - smooth) + skinG * smooth);
+              data[i + 2] = Math.round(b * (1 - smooth) + skinB * smooth);
+            }
+          }
+
+          // Vẽ lại vùng da mịn màng đã xóa thâm nám lên canvas
+          ctx.putImageData(imgData, startX, startY);
+        });
+      } catch (err) {
+        console.warn("Lỗi xử lý blemish concealer:", err);
+      }
+    }
+
+    // =========================================================================
+    // 3. THUẬT TOÁN AI ĐÁNH GIÁ DÁNG KHUÔN MẶT & ĐỘ HỢP KÍNH (OPTICAL STYLING AI)
     // Dựa trên 468 điểm mốc nhân trắc học khuôn mặt từ MediaPipe FaceMesh
     // =========================================================================
     let currentAiAnalysis = null;
@@ -1965,31 +2279,39 @@
         shapeTrait = 'Tỉ lệ vàng cân đối hoàn hảo';
       }
 
-      // 5. MA TRẬN PHÙ HỢP QUANG HỌC THỜI TRANG (Optical Styling Compatibility Matrix)
+      // 5. TỰ ĐỘNG PHÂN TÍCH DÁNG KÍNH THỰC TẾ (AUTO GLASS SHAPE RECOGNITION)
+      const activeImg = (typeof preloadedImages !== 'undefined' && preloadedImages[activeGlassIndex]) ? preloadedImages[activeGlassIndex] : null;
+      const detectedGlass = detectGlassShape(activeData, activeImg);
+      const glassType = detectedGlass.type;
+
+      // 6. MA TRẬN PHÙ HỢP QUANG HỌC THỜI TRANG (Optical Styling Compatibility Matrix)
       // Dựa trên quy tắc đối nghịch (Contrast Rule) và quy tắc cân bằng thị giác của Stylist:
-      const glassType = (activeData.type || 'square').toLowerCase();
       let matchScore = 88;
       let matchTitle = 'Rất hợp khuôn mặt';
       let styleAdvice = '';
 
       switch (shapeKey) {
-        case 'round': // Mặt Tròn -> Cần gọng góc cạnh, vuông, chữ nhật
+        case 'round': // Mặt Tròn -> Cần gọng góc cạnh, vuông, chữ nhật để tạo tương phản
           if (glassType === 'square' || glassType === 'rectangle') {
             matchScore = 97;
             matchTitle = 'Tuyệt phẩm tôn dáng!';
-            styleAdvice = 'Gọng vuông tạo đường nét sắc sảo, giúp gương mặt thon gọn hơn 15%.';
+            styleAdvice = 'Gọng vuông tạo đường nét sắc sảo tương phản, giúp gương mặt tròn thon gọn hơn 15%.';
+          } else if (glassType === 'polygon') {
+            matchScore = 95;
+            matchTitle = 'Góc cạnh cá tính!';
+            styleAdvice = 'Gọng đa giác phá vỡ đường cong tròn, tạo điểm nhấn hiện đại và thanh thoát.';
           } else if (glassType === 'aviator') {
             matchScore = 89;
-            matchTitle = 'Rất hài hòa & cá tính';
-            styleAdvice = 'Dáng phi công kéo dài khuôn mặt tự nhiên, tôn sống mũi cao.';
+            matchTitle = 'Rất hài hòa & phong trần';
+            styleAdvice = 'Dáng phi công kéo dài khuôn mặt tự nhiên, tôn sống mũi cao thanh tú.';
           } else if (glassType === 'oval') {
-            matchScore = 82;
+            matchScore = 80;
             matchTitle = 'Hài hòa nhẹ nhàng';
-            styleAdvice = 'Dáng oval êm dịu nhưng nên ưu tiên gọng có góc viền trên.';
+            styleAdvice = 'Dáng oval êm dịu, nhưng nên ưu tiên gọng có viền trên góc cạnh để tạo điểm nhấn.';
           } else { // round
-            matchScore = 72;
-            matchTitle = 'Hơi trùng nét tròn';
-            styleAdvice = 'Kính tròn lặp lại đường cong mặt; nên thử gọng vuông để tạo điểm nhấn.';
+            matchScore = 74;
+            matchTitle = 'Hơi trùng nét cong';
+            styleAdvice = 'Kính tròn lặp lại đường cong của mặt tròn; Stylist khuyên bạn nên chọn gọng vuông (như Ray-ban Vuông) để gương mặt sắc sảo, góc cạnh hơn!';
           }
           break;
 
@@ -1997,15 +2319,19 @@
           if (glassType === 'round' || glassType === 'oval') {
             matchScore = 98;
             matchTitle = 'Đỉnh cao cân bằng!';
-            styleAdvice = 'Đường cong mềm mại làm dịu quai hàm góc cạnh, tôn vẻ thanh lịch.';
+            styleAdvice = 'Đường cong mềm mại làm dịu quai hàm góc cạnh, tôn vẻ thanh lịch trí thức.';
           } else if (glassType === 'aviator') {
             matchScore = 94;
             matchTitle = 'Cực kỳ phong trần';
-            styleAdvice = 'Dáng giọt nước cân đối hoàn hảo với xương hàm vuông vức.';
+            styleAdvice = 'Dáng giọt nước cân đối hoàn hảo với xương hàm vuông chữ điền.';
+          } else if (glassType === 'polygon') {
+            matchScore = 86;
+            matchTitle = 'Cá tính phá cách';
+            styleAdvice = 'Gọng đa giác tạo phong cách thời trang ấn tượng cho khuôn mặt vuông.';
           } else { // square
             matchScore = 75;
             matchTitle = 'Cá tính mạnh mẽ';
-            styleAdvice = 'Gọng vuông làm gương mặt góc cạnh hơn; hợp phong cách ấn tượng.';
+            styleAdvice = 'Gọng vuông làm gương mặt góc cạnh hơn; Stylist khuyên nên chọn gọng tròn hoặc oval để nét mặt mềm mại hơn.';
           }
           break;
 
@@ -2013,7 +2339,7 @@
           if (glassType === 'square' || glassType === 'aviator') {
             matchScore = 98;
             matchTitle = 'Chuẩn tỉ lệ vàng!';
-            styleAdvice = 'Tôn trọn vẹn nét thanh tú, toát lên phong thái sang trọng.';
+            styleAdvice = 'Tôn trọn vẹn nét thanh tú, toát lên phong thái sang trọng đẳng cấp.';
           } else if (glassType === 'round') {
             matchScore = 94;
             matchTitle = 'Rất trẻ trung & hiện đại';
@@ -2021,17 +2347,21 @@
           } else {
             matchScore = 92;
             matchTitle = 'Rất đẹp & thời thượng';
-            styleAdvice = 'Khuôn mặt trái xoan tự nhiên có thể diện đẹp mọi thiết kế.';
+            styleAdvice = 'Khuôn mặt trái xoan tự nhiên có thể diện đẹp mọi thiết kế kính.';
           }
           break;
 
         case 'oblong': // Mặt Dài -> Cần gọng to bản, gọng tròn, gọng có viền dày
-          if (glassType === 'round' || glassType === 'oval' || glassType === 'aviator') {
+          if (glassType === 'round' || glassType === 'oval') {
             matchScore = 96;
             matchTitle = 'Thu ngắn chiều dài mặt';
             styleAdvice = 'Gọng tròn bản to giúp gương mặt đầy đặn và cân đối thị giác hơn.';
+          } else if (glassType === 'aviator') {
+            matchScore = 94;
+            matchTitle = 'Cân đối tự nhiên';
+            styleAdvice = 'Bản tròng to mở rộng diện tích vùng mắt, che bớt chiều dài gương mặt.';
           } else if (glassType === 'square') {
-            matchScore = 90;
+            matchScore = 88;
             matchTitle = 'Cân đối thanh lịch';
             styleAdvice = 'Nên chọn gọng vuông có chiều cao tròng lớn để tôn khuôn mặt.';
           } else {
@@ -2045,11 +2375,11 @@
           if (glassType === 'aviator' || glassType === 'oval') {
             matchScore = 97;
             matchTitle = 'Tôn cằm V-line!';
-            styleAdvice = 'Đáy kính nở rộng giúp cân bằng vùng trán và cằm nhọn cực duyên.';
+            styleAdvice = 'Đáy kính nở rộng giúp cân bằng hoàn hảo giữa trán rộng và cằm thon gọn.';
           } else if (glassType === 'round') {
             matchScore = 92;
             matchTitle = 'Nhẹ nhàng thanh thoát';
-            styleAdvice = 'Làm dịu vầng trán rộng, tạo cảm giác dễ gần đáng yêu.';
+            styleAdvice = 'Làm dịu vầng trán rộng, tạo cảm giác thân thiện và duyên dáng.';
           } else {
             matchScore = 85;
             matchTitle = 'Cá tính hiện đại';
@@ -2065,7 +2395,7 @@
           } else if (glassType === 'aviator') {
             matchScore = 91;
             matchTitle = 'Rất cuốn hút';
-            styleAdvice = 'Gọng phi công giúp mở rộng vùng trán và cằm cân đối hơn.';
+            styleAdvice = 'Gọng phi công giúp mở rộng vùng trán và cằm, cân bằng gò má ấn tượng.';
           } else {
             matchScore = 83;
             matchTitle = 'Sắc sảo ấn tượng';
@@ -2085,7 +2415,11 @@
         matchScore,
         matchTitle,
         styleAdvice,
-        glassName: activeData.name || 'Kính mắt'
+        glassName: activeData.name || 'Kính mắt',
+        glassType: detectedGlass.type,
+        glassShapeLabel: detectedGlass.label,
+        glassShapeIcon: detectedGlass.icon,
+        glassSubLabel: detectedGlass.subLabel
       };
     }
 
@@ -2097,8 +2431,18 @@
       const adviceEl = document.getElementById('ai-pill-advice');
 
       if (iconEl) iconEl.innerText = analysis.shapeIcon || '✨';
-      if (shapeEl) shapeEl.innerText = analysis.shapeName;
-      if (scoreEl) scoreEl.innerText = `${analysis.matchScore}% ${analysis.matchTitle}`;
+      // Hiển thị cả dáng mặt và dáng kính: vd "Mặt Tròn • Gọng Tròn"
+      if (shapeEl) shapeEl.innerText = `${analysis.shapeName} • ${analysis.glassShapeLabel}`;
+      if (scoreEl) {
+        scoreEl.innerText = `${analysis.matchScore}% ${analysis.matchTitle}`;
+        if (analysis.matchScore >= 90) {
+          scoreEl.style.background = 'linear-gradient(135deg, #007AFF 0%, #00F0FF 100%)';
+        } else if (analysis.matchScore >= 80) {
+          scoreEl.style.background = 'linear-gradient(135deg, #30D158 0%, #34C759 100%)';
+        } else {
+          scoreEl.style.background = 'linear-gradient(135deg, #FF9500 0%, #FFB340 100%)';
+        }
+      }
       if (adviceEl) adviceEl.innerText = analysis.styleAdvice;
     }
 
@@ -2136,13 +2480,22 @@
       const a = currentAiAnalysis;
       content.innerHTML = `
         <div class="ai-report-box">
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
             <div style="font-size:32px;">${a.shapeIcon}</div>
             <div>
-              <div style="font-size:18px; font-weight:700; color:#111;">Dáng mặt: ${a.shapeName}</div>
+              <div style="font-size:17px; font-weight:700; color:#111;">Dáng mặt: ${a.shapeName}</div>
               <div style="font-size:12px; color:#666;">${a.shapeTrait}</div>
             </div>
           </div>
+          
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(0,122,255,0.07); border:1px solid rgba(0,122,255,0.18); border-radius:14px; margin-bottom:12px;">
+            <div style="font-size:24px;">${a.glassShapeIcon || '🕶️'}</div>
+            <div>
+              <div style="font-size:14px; font-weight:700; color:#007AFF;">Nhận diện gọng kính: ${a.glassShapeLabel}</div>
+              <div style="font-size:12px; color:#555;">${a.glassName} (${a.glassSubLabel})</div>
+            </div>
+          </div>
+
           <div class="ai-metric-grid">
             <div class="metric-card">
               <div class="metric-val">${a.ratioHW}</div>
@@ -2162,9 +2515,9 @@
         <div style="background:#fff; border:1px solid rgba(0,0,0,0.08); border-radius:18px; padding:16px; margin-bottom:16px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
             <div style="font-weight:700; font-size:15px; color:#1d1d1f;">Độ tương thích với ${a.glassName}</div>
-            <div style="font-size:18px; font-weight:800; color:#007AFF;">${a.matchScore}%</div>
+            <div style="font-size:18px; font-weight:800; color:${a.matchScore >= 90 ? '#007AFF' : (a.matchScore >= 80 ? '#2e7d32' : '#e65100')};">${a.matchScore}%</div>
           </div>
-          <div style="font-size:13px; font-weight:600; color:#2e7d32; margin-bottom:8px;">✓ ${a.matchTitle}</div>
+          <div style="font-size:13px; font-weight:600; color:${a.matchScore >= 90 ? '#2e7d32' : (a.matchScore >= 80 ? '#007AFF' : '#e65100')}; margin-bottom:8px;">✓ ${a.matchTitle}</div>
           <div style="font-size:12px; color:#555; line-height:1.6; background:#F9F6EF; padding:10px 12px; border-radius:12px;">
             💡 <strong>Lời khuyên Stylist:</strong> ${a.styleAdvice}
           </div>
@@ -2382,11 +2735,11 @@
           ctx.filter = filterStr.trim() || 'none';
           ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
 
-          // Hiệu ứng làm mịn da thông minh (Skin Softening Glow Blend)
+          // Hiệu ứng làm mịn da tự nhiên (Gentle Skin Glow)
           if (activeFilters.beauty) {
             ctx.save();
-            ctx.globalAlpha = 0.35;
-            ctx.filter = 'blur(6px) brightness(1.06)';
+            ctx.globalAlpha = 0.18;
+            ctx.filter = 'blur(4px) brightness(1.03)';
             ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
             ctx.restore();
           }
@@ -2409,6 +2762,12 @@
         if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0 && GLASSES_DATA.length > 0) {
           const landmarks = results.multiFaceLandmarks[0];
           cachedLandmarks = landmarks;
+
+          // THỰC THI AI TRỊ THÂM NÁM, MỤN ĐỎ & TẠO LÀN DA MỊN MÀNG TỰ NHIÊN
+          if (activeFilters.beauty) {
+            applySmartSkinConcealer(ctx, landmarks, canvas.width, canvas.height);
+          }
+
           const activeData = GLASSES_DATA[activeGlassIndex] || GLASSES_DATA[0];
 
           let activeImg = preloadedImages[activeGlassIndex];
