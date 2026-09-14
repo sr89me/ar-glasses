@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR Eyewear Studio - Tách Nền & Chuẩn Hóa Kính Mắt Cho AR</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #090a0f;
+      --bg-card: rgba(18, 20, 29, 0.85);
+      --bg-card-hover: rgba(26, 29, 42, 0.95);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(0, 240, 255, 0.5);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-cyan: #00F0FF;
+      --accent-blue: #0070F3;
+      --accent-purple: #7928CA;
+      --accent-green: #10B981;
+      --accent-red: #EF4444;
+      --shadow-glow: 0 0 25px rgba(0, 240, 255, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #171b2e 0%, var(--bg-dark) 70%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      background: rgba(9, 10, 15, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+    }
+    .logo-icon svg { width: 22px; height: 22px; fill: #fff; }
+    .logo-title h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+    .logo-title p { font-size: 11px; color: var(--text-muted); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0070F3 0%, #00C6FF 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(0, 112, 243, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+    }
+    .btn-green {
+      background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    }
+    .btn-green:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+    .btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* Studio Main Layout */
+    .studio-container {
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      gap: 20px;
+      padding: 20px;
+      flex: 1;
+      max-width: 1700px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Left Sidebar: Batch Upload & File Queue */
+    .sidebar-left {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(15px);
+      height: calc(100vh - 110px);
+      position: sticky;
+      top: 90px;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .badge-count {
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--accent-cyan);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Drop Zone */
+    .upload-zone {
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: rgba(255, 255, 255, 0.02);
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.05);
+      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.08);
+    }
+    .upload-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 12px;
+      color: var(--accent-cyan);
+    }
+    .upload-icon svg { width: 24px; height: 24px; fill: currentColor; }
+    .upload-zone h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .upload-zone p { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+    #file-input { display: none; }
+
+    /* Queue List */
+    .queue-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+    .queue-list::-webkit-scrollbar { width: 5px; }
+    .queue-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+
+    .queue-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .queue-item:hover { background: rgba(255, 255, 255, 0.07); }
+    .queue-item.active {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.08);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+    }
+    .queue-thumb {
+      width: 48px;
+      height: 38px;
+      border-radius: 8px;
+      background: #000;
+      object-fit: contain;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .queue-info { flex: 1; min-width: 0; }
+    .queue-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .queue-status {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .queue-status.done { color: var(--accent-green); }
+    .queue-status.processing { color: var(--accent-cyan); }
+    .queue-del {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      display: flex;
+    }
+    .queue-del:hover { color: var(--accent-red); background: rgba(239, 68, 68, 0.1); }
+    .queue-del svg { width: 14px; height: 14px; fill: currentColor; }
+
+    /* Center Main Workspace: Editor & Split View */
+    .workspace-center {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .editor-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 20px;
+      backdrop-filter: blur(15px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .editor-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tool-tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 12px;
+      gap: 4px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    /* Main Canvas Stage (Checkerboard for transparency) */
+    .canvas-stage {
+      position: relative;
+      width: 100%;
+      height: 440px;
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #12131a;
+      background-image: 
+        linear-gradient(45deg, #1c1e29 25%, transparent 25%), 
+        linear-gradient(-45deg, #1c1e29 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #1c1e29 75%), 
+        linear-gradient(-45deg, transparent 75%, #1c1e29 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      border: 1px solid var(--border-color);
+      cursor: crosshair;
+    }
+
+    #preview-canvas {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7));
+      transition: transform 0.2s ease;
+    }
+
+    /* Split Slider Controls */
+    .split-container {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .split-slider {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+      left: 50%;
+      cursor: ew-resize;
+      pointer-events: auto;
+    }
+    .split-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 32px;
+      height: 32px;
+      background: #00F0FF;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .split-handle svg { width: 16px; height: 16px; fill: #000; }
+
+    /* Processing Overlay */
+    .processing-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(9, 10, 15, 0.85);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .processing-overlay.active { opacity: 1; pointer-events: auto; }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(0, 240, 255, 0.15);
+      border-top-color: var(--accent-cyan);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Controls Grid */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .control-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+    }
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .control-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .control-value {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 5px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    /* Lens Punch-out Options */
+    .lens-options {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .lens-pill {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .lens-pill:hover, .lens-pill.active {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: var(--accent-cyan);
+      color: #fff;
+    }
+
+    /* Right Sidebar: AR Live Previewer & Metadata Generator */
+    .sidebar-right {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      backdrop-filter: blur(15px);
+      height: calc(100vh - 110px);
+      position: sticky;
+      top: 90px;
+    }
+
+    .ar-fit-stage {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: #000;
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+    }
+    #face-mockup {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+    }
+    #ar-try-glasses {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 78%;
+      pointer-events: none;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.6));
+      transition: all 0.15s ease-out;
+    }
+
+    /* Code Export Box */
+    .code-box {
+      background: #0d0f17;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      position: relative;
+    }
+    .code-box pre {
+      font-family: monospace;
+      font-size: 11px;
+      color: #7dd3fc;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .btn-copy {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-copy:hover { background: var(--accent-cyan); color: #000; }
+
+    /* Tips & Instructions banner */
+    .tips-banner {
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 11px;
+      color: #a5f3fc;
+      line-height: 1.5;
+    }
+    .tips-banner b { color: #fff; }
+
+    @media (max-width: 1200px) {
+      .studio-container { grid-template-columns: 1fr; }
+      .sidebar-left, .sidebar-right { height: auto; position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="#" class="logo-group">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 6h-3.38c-.46-1.74-2.04-3-3.92-3s-3.46 1.26-3.92 3H13.2c-.46-1.74-2.04-3-3.92-3S5.82 4.26 5.38 6H2v2h1.1c.42 4.45 4.15 8 8.7 8 2.05 0 3.93-.72 5.4-1.92 1.47 1.2 3.35 1.92 5.4 1.92 4.55 0 8.28-3.55 8.7-8H22V6zm-10 8c-3.31 0-6-2.69-6-6h6v6zm8 0c-3.31 0-6-2.69-6-6h6v6z"/></svg>
+      </div>
+      <div class="logo-title">
+        <h1>AR Eyewear Studio</h1>
+        <p>Tự động tách nền & Đục tròng kính chuẩn hóa AR</p>
+      </div>
+    </a>
+
+    <div class="nav-actions">
+      <a href="index.html" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span>Về trang AR Kính</span>
+      </a>
+      <button class="btn btn-green" id="btn-export-current" onclick="downloadCurrentPng()">
+        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        <span>Tải ảnh PNG hiện tại</span>
+      </button>
+      <button class="btn btn-primary" id="btn-export-zip" onclick="exportBatchZip()">
+        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+        <span>Tải toàn bộ (.ZIP)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Studio Container -->
+  <div class="studio-container">
+    
+    <!-- Left Column: Upload & Queue -->
+    <div class="sidebar-left">
+      <div class="panel-title">
+        <span>Danh Sách Ảnh Chụp</span>
+        <span class="badge-count" id="queue-badge">0 ảnh</span>
+      </div>
+
+      <!-- Drag & Drop Upload Zone -->
+      <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <div class="upload-icon">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+        </div>
+        <h3>Kéo thả hoặc Bấm chọn ảnh</h3>
+        <p>Hỗ trợ chọn 1 hoặc nhiều ảnh chụp từ điện thoại (JPG, PNG, WEBP)</p>
+        <input type="file" id="file-input" multiple accept="image/*" onchange="handleFileSelect(event)">
+      </div>
+
+      <div class="panel-title" style="font-size: 13px;">
+        <span>Hàng đợi xử lý</span>
+        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="processAllQueue()">⚡ Xử lý tất cả</button>
+      </div>
+
+      <!-- Queue List -->
+      <div class="queue-list" id="queue-container">
+        <!-- Will be populated by JS -->
+      </div>
+    </div>
+
+    <!-- Center Column: Workspace & Canvas -->
+    <div class="workspace-center">
+      <div class="editor-card">
+        <div class="editor-toolbar">
+          <div class="tool-tabs">
+            <button class="tab-btn active" id="tab-auto" onclick="setMode('auto')">🪄 Tách Nền AI Tự Động</button>
+            <button class="tab-btn" id="tab-wand" onclick="setMode('wand')">🎯 Đục Tròng & Xóa Chạm (Magic Wand)</button>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="reprocessCurrent()">
+              <span>Làm mới lại</span>
+            </button>
+            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="autoTrimAndCenter()">
+              <span>✂️ Cắt sát viền & Cân bằng</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas Stage -->
+        <div class="canvas-stage" id="canvas-stage">
+          <canvas id="preview-canvas"></canvas>
+          
+          <div class="processing-overlay" id="loading-overlay">
+            <div class="spinner"></div>
+            <div style="font-size: 14px; font-weight: 600; color: #00F0FF;" id="loading-text">Đang nhận diện gọng kính & tách nền...</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-grid">
+          <!-- Tolerance -->
+          <div class="control-box">
+            <div class="control-header">
+              <span class="control-label">Độ nhạy tách màu nền (Tolerance)</span>
+              <span class="control-value" id="val-tolerance">38</span>
+            </div>
+            <input type="range" id="slider-tolerance" min="10" max="90" value="38" oninput="updateTolerance(this.value)">
+          </div>
+
+          <!-- Feathering / Smoothness -->
+          <div class="control-box">
+            <div class="control-header">
+              <span class="control-label">Độ mịn viền gọng (Feather)</span>
+              <span class="control-value" id="val-feather">2 px</span>
+            </div>
+            <input type="range" id="slider-feather" min="0" max="6" value="2" oninput="updateFeather(this.value)">
+          </div>
+
+          <!-- Lens Punch-out -->
+          <div class="control-box">
+            <div class="control-header">
+              <span class="control-label">Hiệu ứng tròng kính (Lens Punch-out)</span>
+            </div>
+            <div class="lens-options">
+              <div class="lens-pill active" onclick="setLensTint('clear', this)">Trong suốt</div>
+              <div class="lens-pill" onclick="setLensTint('smoke', this)">Râm khói 25%</div>
+              <div class="lens-pill" onclick="setLensTint('blue', this)">Chống lóa xanh</div>
+              <div class="lens-pill" onclick="setLensTint('keep', this)">Giữ nguyên</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips-banner">
+          💡 <b>Mẹo cho ảnh chụp từ điện thoại:</b> Đặt kính trên tờ giấy trắng hoặc mặt bàn trơn màu sáng, chụp vuông góc chính diện kính từ trên xuống dưới ánh sáng đều.
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: AR Live Fit Test & Meta -->
+    <div class="sidebar-right">
+      <div class="panel-title">
+        <span>Ướm Thử AR Lên Mặt</span>
+        <span class="badge-count" style="background: rgba(16, 185, 129, 0.15); color: #10B981;">Live Fit</span>
+      </div>
+
+      <!-- AR Fit Previewer Stage -->
+      <div class="ar-fit-stage" id="ar-fit-stage">
+        <!-- SVG Realistic Face Mockup with Eyes for AR Testing -->
+        <svg id="face-mockup" viewBox="0 0 300 375" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="skin" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stop-color="#ffdfcc"/>
+              <stop offset="85%" stop-color="#e2aa8e"/>
+              <stop offset="100%" stop-color="#c98a6e"/>
+            </radialGradient>
+            <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2a221b"/>
+              <stop offset="100%" stop-color="#140f0c"/>
+            </linearGradient>
+          </defs>
+          <!-- Background glow -->
+          <rect width="300" height="375" fill="#0f111a"/>
+          
+          <!-- Hair Back -->
+          <path d="M 60 170 C 40 90, 80 20, 150 20 C 220 20, 260 90, 240 170 Z" fill="url(#hair)"/>
+          
+          <!-- Face Head Shape -->
+          <path d="M 70 120 C 70 60, 230 60, 230 120 C 230 200, 205 270, 150 270 C 95 270, 70 200, 70 120 Z" fill="url(#skin)"/>
+          
+          <!-- Neck -->
+          <path d="M 115 250 L 115 350 L 185 350 L 185 250 Z" fill="#cf9578"/>
+          
+          <!-- Eyebrows -->
+          <path d="M 90 125 Q 115 115, 135 125" stroke="#3d2b1f" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+          <path d="M 165 125 Q 185 115, 210 125" stroke="#3d2b1f" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+
+          <!-- Eyes -->
+          <g>
+            <!-- Left Eye -->
+            <ellipse cx="112" cy="140" rx="14" ry="7" fill="#ffffff"/>
+            <circle cx="112" cy="140" r="5.5" fill="#362213"/>
+            <circle cx="110" cy="138" r="2" fill="#ffffff"/>
+            <!-- Right Eye -->
+            <ellipse cx="188" cy="140" rx="14" ry="7" fill="#ffffff"/>
+            <circle cx="188" cy="140" r="5.5" fill="#362213"/>
+            <circle cx="186" cy="138" r="2" fill="#ffffff"/>
+          </g>
+
+          <!-- Nose -->
+          <path d="M 150 140 L 146 175 Q 150 180, 154 175 Z" fill="#c4886c"/>
+          
+          <!-- Mouth -->
+          <path d="M 130 215 Q 150 225, 170 215" stroke="#a24c42" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </svg>
+
+        <!-- Glasses Fitted on Face -->
+        <img id="ar-try-glasses" src="Rayban.png" alt="Glasses preview">
+      </div>
+
+      <!-- AR Slider Adjustments -->
+      <div>
+        <div class="control-header">
+          <span class="control-label">Tỉ lệ kích thước (Scale đề xuất)</span>
+          <span class="control-value" id="val-ar-scale">1.32</span>
+        </div>
+        <input type="range" id="ar-scale-slider" min="0.8" max="1.8" step="0.01" value="1.32" oninput="updateArScale(this.value)">
+      </div>
+
+      <div>
+        <div class="control-header">
+          <span class="control-label">Độ nâng hạ sống mũi (offsetY)</span>
+          <span class="control-value" id="val-ar-offset">0.05</span>
+        </div>
+        <input type="range" id="ar-offset-slider" min="-0.2" max="0.2" step="0.01" value="0.05" oninput="updateArOffset(this.value)">
+      </div>
+
+      <!-- Quick Size Calculator relative to Rayban 55-16 -->
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px;">
+        <div class="control-header" style="margin-bottom: 6px;">
+          <span class="control-label">📐 Tự tính theo size kính (Chuẩn 55-16 = 1.26)</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="input-glass-size" value="58-16" placeholder="vd: 58-16" style="background: #000; border: 1px solid var(--border-color); color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 12px; width: 85px;">
+          <button class="btn btn-secondary" style="padding: 6px 10px; font-size: 11px;" onclick="calcScaleFromSize()">Tính Scale</button>
+        </div>
+        <div style="font-size: 10px; color: var(--text-muted); margin-top: 6px;">
+          Độ rộng lớn hơn thì scale nhỏ hơn: 55-16 = 1.26 • 58-16 = 1.20 (offsetY 0.08 cố định)
+        </div>
+      </div>
+
+      <!-- Ready to paste into Google Sheets -->
+      <div class="code-box">
+        <button class="btn-copy" onclick="copySheetsMeta()">Copy</button>
+        <div style="font-size: 10px; color: #9ca3af; margin-bottom: 4px; font-weight: 600;">DỮ LIỆU ĐIỀN GOOGLE SHEETS:</div>
+        <pre id="code-snippet">scale: 1.32, offsetY: 0.05</pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    const queue = [];
+    let activeIndex = -1;
+    let currentMode = 'auto'; // 'auto' | 'wand'
+    let currentLensTint = 'clear'; // 'clear' | 'smoke' | 'blue' | 'keep'
+    let toleranceValue = 38;
+    let featherValue = 2;
+
+    const previewCanvas = document.getElementById('preview-canvas');
+    const ctx = previewCanvas.getContext('2d', { willReadFrequently: true });
+    const arGlassesImg = document.getElementById('ar-try-glasses');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const queueContainer = document.getElementById('queue-container');
+    const queueBadge = document.getElementById('queue-badge');
+
+    // Drag and drop listeners
+    const dropZone = document.getElementById('drop-zone');
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+    });
+    dropZone.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        addFilesToQueue(Array.from(e.dataTransfer.files));
+      }
+    });
+
+    function handleFileSelect(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        addFilesToQueue(Array.from(e.target.files));
+      }
+    }
+
+    function addFilesToQueue(files) {
+      files.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            queue.push({
+              name: file.name.replace(/\.[^/.]+$/, ""),
+              originalImg: img,
+              processedCanvas: null,
+              status: 'ready' // 'ready', 'done'
+            });
+            renderQueue();
+            if (activeIndex === -1) {
+              selectQueueItem(queue.length - 1);
+            }
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderQueue() {
+      queueContainer.innerHTML = '';
+      queueBadge.innerText = `${queue.length} ảnh`;
+
+      queue.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = `queue-item ${idx === activeIndex ? 'active' : ''}`;
+        div.onclick = () => selectQueueItem(idx);
+
+        const statusHtml = item.status === 'done' 
+          ? `<span class="queue-status done">✓ Đã tách nền</span>` 
+          : `<span class="queue-status">⏳ Chờ xử lý</span>`;
+
+        div.innerHTML = `
+          <img class="queue-thumb" src="${item.processedCanvas ? item.processedCanvas.toDataURL() : item.originalImg.src}">
+          <div class="queue-info">
+            <div class="queue-name">${item.name}</div>
+            ${statusHtml}
+          </div>
+          <button class="queue-del" onclick="event.stopPropagation(); deleteQueueItem(${idx})">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </button>
+        `;
+        queueContainer.appendChild(div);
+      });
+    }
+
+    function deleteQueueItem(idx) {
+      queue.splice(idx, 1);
+      if (activeIndex >= queue.length) activeIndex = queue.length - 1;
+      renderQueue();
+      if (activeIndex >= 0) selectQueueItem(activeIndex);
+      else {
+        ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+        arGlassesImg.src = 'Rayban.png';
+      }
+    }
+
+    function selectQueueItem(idx) {
+      if (!queue[idx]) return;
+      activeIndex = idx;
+      renderQueue();
+
+      const item = queue[idx];
+      if (!item.processedCanvas) {
+        processItem(item);
+      } else {
+        displayProcessedItem(item);
+      }
+    }
+
+    // ==========================================
+    // SMART BACKGROUND REMOVAL & LENS PUNCH-OUT
+    // ==========================================
+    function processItem(item) {
+      loadingOverlay.classList.add('active');
+
+      setTimeout(() => {
+        const orig = item.originalImg;
+        const w = orig.naturalWidth || orig.width;
+        const h = orig.naturalHeight || orig.height;
+
+        // Downscale slightly if too massive to guarantee high performance
+        const maxDim = 1600;
+        let targetW = w, targetH = h;
+        if (targetW > maxDim || targetH > maxDim) {
+          const ratio = Math.min(maxDim / targetW, maxDim / targetH);
+          targetW = Math.round(targetW * ratio);
+          targetH = Math.round(targetH * ratio);
+        }
+
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = targetW;
+        tempCanvas.height = targetH;
+        const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
+        tempCtx.drawImage(orig, 0, 0, targetW, targetH);
+
+        const imgData = tempCtx.getImageData(0, 0, targetW, targetH);
+        const data = imgData.data;
+
+        // 1. Sample Background Color from corners & edges (4 corners)
+        const samples = [
+          getPixel(data, targetW, 4, 4),
+          getPixel(data, targetW, targetW - 5, 4),
+          getPixel(data, targetW, 4, targetH - 5),
+          getPixel(data, targetW, targetW - 5, targetH - 5),
+          getPixel(data, targetW, Math.floor(targetW / 2), 4),
+          getPixel(data, targetW, Math.floor(targetW / 2), targetH - 5)
+        ];
+
+        // Compute average background color
+        const avgBg = {
+          r: samples.reduce((acc, c) => acc + c.r, 0) / samples.length,
+          g: samples.reduce((acc, c) => acc + c.g, 0) / samples.length,
+          b: samples.reduce((acc, c) => acc + c.b, 0) / samples.length
+        };
+
+        const tol = toleranceValue;
+        const tolSq = tol * tol;
+
+        // Flood Fill / Edge Segment Background from edges inward
+        const visited = new Uint8Array(targetW * targetH);
+        const queueFill = [];
+
+        // Push border pixels
+        for (let x = 0; x < targetW; x++) {
+          queueFill.push(x, 0);
+          queueFill.push(x, targetH - 1);
+          visited[x] = 1;
+          visited[(targetH - 1) * targetW + x] = 1;
+        }
+        for (let y = 0; y < targetH; y++) {
+          queueFill.push(0, y);
+          queueFill.push(targetW - 1, y);
+          visited[y * targetW] = 1;
+          visited[y * targetW + (targetW - 1)] = 1;
+        }
+
+        // BFS Flood fill outer background
+        let head = 0;
+        while (head < queueFill.length) {
+          const cx = queueFill[head++];
+          const cy = queueFill[head++];
+          const cIdx = (cy * targetW + cx) * 4;
+
+          // Make outer background transparent
+          data[cIdx + 3] = 0;
+
+          // Check 4 neighbours
+          const neighbours = [
+            cx + 1, cy,
+            cx - 1, cy,
+            cx, cy + 1,
+            cx, cy - 1
+          ];
+
+          for (let i = 0; i < neighbours.length; i += 2) {
+            const nx = neighbours[i];
+            const ny = neighbours[i + 1];
+
+            if (nx >= 0 && nx < targetW && ny >= 0 && ny < targetH) {
+              const nFlat = ny * targetW + nx;
+              if (!visited[nFlat]) {
+                visited[nFlat] = 1;
+                const nIdx = nFlat * 4;
+                const nr = data[nIdx];
+                const ng = data[nIdx + 1];
+                const nb = data[nIdx + 2];
+
+                // Euclidean distance in RGB color space
+                const dr = nr - avgBg.r;
+                const dg = ng - avgBg.g;
+                const db = nb - avgBg.b;
+                const distSq = dr * dr + dg * dg + db * db;
+
+                // If close to background color, expand flood fill
+                if (distSq < tolSq * 3.5) {
+                  queueFill.push(nx, ny);
+                }
+              }
+            }
+          }
+        }
+
+        // 2. Dual-Lens Cavity Punch-out: Find enclosed cavities (the 2 lens holes)
+        // Lenses are located horizontally around 25% - 45% and 55% - 75% width, 30% - 70% height
+        if (currentLensTint !== 'keep') {
+          punchOutLenses(data, targetW, targetH, avgBg, currentLensTint);
+        }
+
+        // Put image back
+        tempCtx.putImageData(imgData, 0, 0);
+
+        // 3. Auto-crop tightly around the eyeglasses frame
+        const croppedCanvas = cropTransparentPadding(tempCanvas);
+
+        item.processedCanvas = croppedCanvas;
+        item.status = 'done';
+
+        displayProcessedItem(item);
+        renderQueue();
+        loadingOverlay.classList.remove('active');
+      }, 150);
+    }
+
+    function getPixel(data, width, x, y) {
+      const idx = (y * width + x) * 4;
+      return { r: data[idx], g: data[idx + 1], b: data[idx + 2], a: data[idx + 3] };
+    }
+
+    // Punch out the internal lens areas
+    function punchOutLenses(data, width, height, avgBg, tintMode) {
+      // Find candidate seed points inside left lens and right lens
+      const leftSeedX = Math.floor(width * 0.35);
+      const rightSeedX = Math.floor(width * 0.65);
+      const seedY = Math.floor(height * 0.50);
+
+      [leftSeedX, rightSeedX].forEach(seedX => {
+        // Flood fill internal lens
+        const visitedLens = new Uint8Array(width * height);
+        const q = [seedX, seedY];
+        const flatSeed = seedY * width + seedX;
+        visitedLens[flatSeed] = 1;
+
+        let head = 0;
+        while (head < q.length) {
+          const cx = q[head++];
+          const cy = q[head++];
+          const cIdx = (cy * width + cx) * 4;
+
+          // If pixel was already removed by outer background fill, skip
+          if (data[cIdx + 3] === 0) continue;
+
+          // Apply lens transparency or tint
+          if (tintMode === 'clear') {
+            data[cIdx + 3] = 0; // 100% transparent lens
+          } else if (tintMode === 'smoke') {
+            data[cIdx] = 30;
+            data[cIdx + 1] = 30;
+            data[cIdx + 2] = 35;
+            data[cIdx + 3] = 60; // 25% smoke tint
+          } else if (tintMode === 'blue') {
+            data[cIdx] = 0;
+            data[cIdx + 1] = 150;
+            data[cIdx + 2] = 255;
+            data[cIdx + 3] = 45; // Anti-blue light tint
+          }
+
+          const neighbours = [cx + 1, cy, cx - 1, cy, cx, cy + 1, cx, cy - 1];
+          for (let i = 0; i < neighbours.length; i += 2) {
+            const nx = neighbours[i];
+            const ny = neighbours[i + 1];
+            if (nx >= width * 0.15 && nx <= width * 0.85 && ny >= height * 0.2 && ny <= height * 0.8) {
+              const nFlat = ny * width + nx;
+              if (!visitedLens[nFlat]) {
+                visitedLens[nFlat] = 1;
+                const nIdx = nFlat * 4;
+                if (data[nIdx + 3] > 0) {
+                  // Only fill if pixel is not strong dark frame border
+                  const r = data[nIdx], g = data[nIdx + 1], b = data[nIdx + 2];
+                  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                  // If color matches light desk/background beneath glass
+                  const dr = r - avgBg.r, dg = g - avgBg.g, db = b - avgBg.b;
+                  const dist = Math.sqrt(dr*dr + dg*dg + db*db);
+                  if (dist < toleranceValue * 1.8 || brightness > 160) {
+                    q.push(nx, ny);
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Auto-crop transparent boundaries to guarantee perfectly centered glasses
+    function cropTransparentPadding(sourceCanvas) {
+      const sCtx = sourceCanvas.getContext('2d');
+      const w = sourceCanvas.width;
+      const h = sourceCanvas.height;
+      const imgData = sCtx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      let minX = w, minY = h, maxX = 0, maxY = 0;
+
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const alpha = data[(y * w + x) * 4 + 3];
+          if (alpha > 10) {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+          }
+        }
+      }
+
+      // If empty
+      if (minX > maxX || minY > maxY) return sourceCanvas;
+
+      // Add small safety padding (5%)
+      const pad = Math.round((maxX - minX) * 0.03);
+      minX = Math.max(0, minX - pad);
+      minY = Math.max(0, minY - pad);
+      maxX = Math.min(w, maxX + pad);
+      maxY = Math.min(h, maxY + pad);
+
+      const cropW = maxX - minX;
+      const cropH = maxY - minY;
+
+      const outCanvas = document.createElement('canvas');
+      outCanvas.width = cropW;
+      outCanvas.height = cropH;
+      const outCtx = outCanvas.getContext('2d');
+      outCtx.drawImage(sourceCanvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+
+      return outCanvas;
+    }
+
+    function displayProcessedItem(item) {
+      if (!item.processedCanvas) return;
+      const cvs = item.processedCanvas;
+      previewCanvas.width = cvs.width;
+      previewCanvas.height = cvs.height;
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      ctx.drawImage(cvs, 0, 0);
+
+      // Update AR Live Mockup
+      const dataUrl = cvs.toDataURL('image/png');
+      arGlassesImg.src = dataUrl;
+    }
+
+    // Magic Wand / Click to Erase on Canvas
+    previewCanvas.addEventListener('click', (e) => {
+      if (currentMode !== 'wand' || activeIndex === -1) return;
+      const rect = previewCanvas.getBoundingClientRect();
+      const scaleX = previewCanvas.width / rect.width;
+      const scaleY = previewCanvas.height / rect.height;
+      const clickX = Math.floor((e.clientX - rect.left) * scaleX);
+      const clickY = Math.floor((e.clientY - rect.top) * scaleY);
+
+      eraseConnectedColor(clickX, clickY);
+    });
+
+    function eraseConnectedColor(startX, startY) {
+      const w = previewCanvas.width;
+      const h = previewCanvas.height;
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      const startIdx = (startY * w + startX) * 4;
+      const targetR = data[startIdx];
+      const targetG = data[startIdx + 1];
+      const targetB = data[startIdx + 2];
+      const targetA = data[startIdx + 3];
+
+      if (targetA === 0) return;
+
+      const visited = new Uint8Array(w * h);
+      const q = [startX, startY];
+      visited[startY * w + startX] = 1;
+
+      const tolSq = toleranceValue * toleranceValue * 1.5;
+
+      let head = 0;
+      while (head < q.length) {
+        const cx = q[head++];
+        const cy = q[head++];
+        const cIdx = (cy * w + cx) * 4;
+
+        data[cIdx + 3] = 0; // Erase pixel
+
+        const neighbours = [cx + 1, cy, cx - 1, cy, cx, cy + 1, cx, cy - 1];
+        for (let i = 0; i < neighbours.length; i += 2) {
+          const nx = neighbours[i];
+          const ny = neighbours[i + 1];
+          if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+            const nFlat = ny * w + nx;
+            if (!visited[nFlat]) {
+              visited[nFlat] = 1;
+              const nIdx = nFlat * 4;
+              if (data[nIdx + 3] > 0) {
+                const dr = data[nIdx] - targetR;
+                const dg = data[nIdx + 1] - targetG;
+                const db = data[nIdx + 2] - targetB;
+                if (dr * dr + dg * dg + db * db < tolSq) {
+                  q.push(nx, ny);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+      if (queue[activeIndex]) {
+        queue[activeIndex].processedCanvas = cropTransparentPadding(previewCanvas);
+        arGlassesImg.src = queue[activeIndex].processedCanvas.toDataURL('image/png');
+      }
+    }
+
+    // Controls
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('tab-auto').classList.toggle('active', mode === 'auto');
+      document.getElementById('tab-wand').classList.toggle('active', mode === 'wand');
+      previewCanvas.style.cursor = (mode === 'wand') ? 'crosshair' : 'default';
+    }
+
+    function setLensTint(tint, el) {
+      currentLensTint = tint;
+      document.querySelectorAll('.lens-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      reprocessCurrent();
+    }
+
+    function updateTolerance(val) {
+      toleranceValue = parseInt(val);
+      document.getElementById('val-tolerance').innerText = val;
+    }
+
+    function updateFeather(val) {
+      featherValue = parseInt(val);
+      document.getElementById('val-feather').innerText = `${val} px`;
+    }
+
+    function reprocessCurrent() {
+      if (activeIndex >= 0 && queue[activeIndex]) {
+        processItem(queue[activeIndex]);
+      }
+    }
+
+    function autoTrimAndCenter() {
+      if (activeIndex >= 0 && queue[activeIndex] && queue[activeIndex].processedCanvas) {
+        queue[activeIndex].processedCanvas = cropTransparentPadding(queue[activeIndex].processedCanvas);
+        displayProcessedItem(queue[activeIndex]);
+      }
+    }
+
+    function processAllQueue() {
+      if (queue.length === 0) return;
+      let idx = 0;
+      function next() {
+        if (idx < queue.length) {
+          selectQueueItem(idx);
+          idx++;
+          setTimeout(next, 500);
+        }
+      }
+      next();
+    }
+
+    // AR Slider Adjustments
+    function updateArScale(val) {
+      document.getElementById('val-ar-scale').innerText = val;
+      arGlassesImg.style.width = `${Math.round(val * 60)}%`;
+      updateCodeSnippet();
+    }
+
+    function updateArOffset(val) {
+      document.getElementById('val-ar-offset').innerText = val;
+      const baseTop = 38;
+      arGlassesImg.style.top = `${baseTop + (val * 40)}%`;
+      updateCodeSnippet();
+    }
+
+    function calcScaleFromSize() {
+      const input = document.getElementById('input-glass-size').value.trim();
+      const parts = input.split('-');
+      if (parts.length === 2) {
+        const lensW = parseFloat(parts[0]);
+        const bridgeW = parseFloat(parts[1]);
+        if (!isNaN(lensW) && !isNaN(bridgeW)) {
+          const currentPhysWidth = (lensW * 2) + bridgeW;
+          const raybanPhysWidth = (55 * 2) + 16; // 126mm
+          
+          // Kính có độ rộng lớn hơn thì scale nhỏ hơn theo tỉ lệ nghịch
+          let calculatedScale = 1.26 * (raybanPhysWidth / currentPhysWidth);
+          calculatedScale = Math.round(calculatedScale * 100) / 100;
+          
+          // offsetY = 0.08 cố định
+          document.getElementById('ar-offset-slider').value = 0.08;
+          updateArOffset(0.08);
+          
+          document.getElementById('ar-scale-slider').value = calculatedScale;
+          updateArScale(calculatedScale);
+        }
+      }
+    }
+
+    function updateCodeSnippet() {
+      const s = document.getElementById('val-ar-scale').innerText;
+      const o = document.getElementById('val-ar-offset').innerText;
+      document.getElementById('code-snippet').innerText = `scale: ${s}, offsetY: ${o}`;
+    }
+
+    function copySheetsMeta() {
+      const text = document.getElementById('code-snippet').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        btn.innerText = '✓ Đã chép';
+        setTimeout(() => { btn.innerText = 'Copy'; }, 1500);
+      });
+    }
+
+    // Download Single PNG
+    function downloadCurrentPng() {
+      if (activeIndex === -1 || !queue[activeIndex] || !queue[activeIndex].processedCanvas) {
+        alert('Vui lòng tải ảnh kính lên trước khi tải về!');
+        return;
+      }
+      const item = queue[activeIndex];
+      const link = document.createElement('a');
+      link.download = `${item.name}-ar-transparent.png`;
+      link.href = item.processedCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Export Batch Zip
+    async function exportBatchZip() {
+      if (queue.length === 0) {
+        alert('Hàng đợi chưa có ảnh nào!');
+        return;
+      }
+
+      const btn = document.getElementById('btn-export-zip');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span>⏳ Đang nén ZIP...</span>`;
+
+      try {
+        const zip = new JSZip();
+        let addedCount = 0;
+
+        for (let i = 0; i < queue.length; i++) {
+          const item = queue[i];
+          let canvas = item.processedCanvas;
+          if (!canvas) {
+            // Process if not already
+            processItem(item);
+            canvas = item.processedCanvas;
+          }
+          if (canvas) {
+            const dataUrl = canvas.toDataURL('image/png');
+            const base64Data = dataUrl.replace(/^data:image\/png;base64,/, "");
+            zip.file(`${item.name}.png`, base64Data, { base64: true });
+            addedCount++;
+          }
+        }
+
+        const content = await zip.generateAsync({ type: 'blob' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = `glasses-ar-collection.zip`;
+        link.click();
+      } catch (e) {
+        console.error("Lỗi khi tạo file zip:", e);
+        alert('Có lỗi xảy ra khi tạo file zip!');
+      } finally {
+        btn.innerHTML = originalText;
+      }
+    }
+
+    // Initialize with a working sample if empty
+    window.addEventListener('DOMContentLoaded', () => {
+      // Pre-load Rayban.png as sample
+      const sampleImg = new Image();
+      sampleImg.onload = () => {
+        queue.push({
+          name: "Rayban-Sample",
+          originalImg: sampleImg,
+          processedCanvas: null,
+          status: 'ready'
+        });
+        renderQueue();
+        selectQueueItem(0);
+      };
+      sampleImg.src = 'Rayban.png';
+    });
+  </script>
+</body>
+</html>
