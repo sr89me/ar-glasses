@@ -265,10 +265,31 @@
       background: rgba(16, 185, 129, 0.1);
       border-color: #10B981;
       color: #047857;
+      position: relative;
     }
     .nav-btn-orders:hover {
       background: rgba(16, 185, 129, 0.18);
       border-color: #059669;
+    }
+    .nav-orders-badge {
+      background: #EF4444 !important;
+      color: #FFFFFF !important;
+      font-size: 11px !important;
+      font-weight: 800 !important;
+      border-radius: 9999px !important;
+      min-width: 18px !important;
+      height: 18px !important;
+      padding: 0 5px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      line-height: 1 !important;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.45);
+      margin-left: 4px;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .nav-orders-badge.badge-pop {
+      transform: scale(1.45);
     }
 
     /* ==========================================================================
@@ -1060,33 +1081,31 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      cursor: pointer;
     }
     .soundscape-centerpiece:hover {
-      transform: scale(1.08);
+      transform: scale(1.1);
       border-color: #38BDF8;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 28px rgba(56, 189, 248, 0.6);
     }
-    .sound-wave-bars {
-      display: flex;
-      align-items: center;
-      gap: 3.5px;
-      height: 22px;
+    .soundscape-note-icon {
+      width: 28px;
+      height: 28px;
+      filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
+      animation: noteFloat 2s ease-in-out infinite alternate;
     }
-    .sw-bar {
-      width: 3.5px;
-      background: linear-gradient(180deg, #FFFFFF 0%, #38BDF8 100%);
-      border-radius: 3px;
-      display: inline-block;
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+    .soundscape-centerpiece.playing .soundscape-note-icon {
+      animation: noteBeat 0.8s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 14px rgba(56, 189, 248, 1)) drop-shadow(0 0 6px #FFFFFF);
     }
-    .bar-1 { height: 10px; animation: soundBarAnim 1.2s ease-in-out infinite alternate; }
-    .bar-2 { height: 18px; animation: soundBarAnim 0.85s ease-in-out infinite alternate 0.2s; }
-    .bar-3 { height: 24px; animation: soundBarAnim 1.4s ease-in-out infinite alternate 0.4s; }
-    .bar-4 { height: 16px; animation: soundBarAnim 1.05s ease-in-out infinite alternate 0.15s; }
-    .bar-5 { height: 11px; animation: soundBarAnim 1.3s ease-in-out infinite alternate 0.35s; }
-    @keyframes soundBarAnim {
-      0% { transform: scaleY(0.35); opacity: 0.6; }
-      100% { transform: scaleY(1); opacity: 1; }
+    @keyframes noteFloat {
+      0% { transform: translateY(1px) scale(0.96); }
+      100% { transform: translateY(-2px) scale(1.04); }
+    }
+    @keyframes noteBeat {
+      0% { transform: scale(0.92) rotate(-3deg); }
+      100% { transform: scale(1.1) rotate(4deg); }
     }
     .soundscape-badge {
       font-size: 8px;
@@ -1532,7 +1551,7 @@
     /* TẦNG ĐIỀU KHIỂN CAMERA: CÔNG CỤ TRÁI (HÀNG NGANG), NÚT CHỤP GIỮA, KHUNG ẢNH SO SÁNH PHẢI */
     .ar-camera-controls-layer {
       position: absolute;
-      bottom: 60px; /* Nằm cách đáy 60px, HOÀN TOÀN TRÊN thanh thông số kính (kết thúc ở 54px) */
+      bottom: 66px; /* Nằm cách đáy 66px, trên thanh thông số kính bo 4 góc */
       left: 8px;
       right: 44px; /* Chừa 44px để không chạm thanh action pill bên phải */
       display: flex;
@@ -1626,19 +1645,19 @@
     .pip-camera-box,
     .pip-captured-box {
       width: 44px;
-      height: 32px;
-      border-radius: 7px;
-      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      height: 56px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
       background: #000;
       overflow: hidden;
       cursor: pointer;
       position: relative;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .pip-camera-box:hover,
     .pip-captured-box:hover {
-      transform: scale(1.12);
+      transform: scale(1.1);
       border-color: #00A3FF;
       box-shadow: 0 6px 18px rgba(0, 163, 255, 0.5);
     }
@@ -1671,19 +1690,20 @@
       letter-spacing: 0.2px;
     }
 
-    /* Bottom Eyewear Info Bar inside AR screen - NẰM GỌN GÀNG SÁT ĐÁY (CAO 48px), KHÔNG BAO GIỜ CHỒNG LẤN */
+    /* Bottom Eyewear Info Bar inside AR screen - NẰM GỌN GÀNG SÁT ĐÁY, BO VIỀN 4 GÓC */
     .ar-bottom-specs-bar {
       position: absolute;
-      bottom: 6px;
+      bottom: 8px;
       left: 8px;
       right: 44px; /* Chừa 44px cho action pill */
-      height: 48px;
-      background: rgba(255, 255, 255, 0.88);
+      height: auto;
+      min-height: 50px;
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(30px) saturate(210%);
       -webkit-backdrop-filter: blur(30px) saturate(210%);
       border: 1.5px solid rgba(255, 255, 255, 0.95);
-      border-radius: 14px;
-      padding: 4px 8px;
+      border-radius: 16px;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -2440,9 +2460,9 @@
       .app-workspace.mode-unfolded .foldable-duo-device {
         width: 100% !important;
         max-width: 440px !important;
-        height: calc(100dvh - 134px) !important;
-        max-height: 640px !important;
-        min-height: 480px !important;
+        height: calc(100dvh - 120px) !important;
+        max-height: calc(100dvh - 120px) !important;
+        min-height: 0 !important;
         aspect-ratio: auto !important;
         background: rgba(255, 255, 255, 0.88) !important;
         backdrop-filter: blur(30px) saturate(180%) !important;
@@ -2549,20 +2569,23 @@
         white-space: nowrap !important;
       }
 
-      /* Tầng điều khiển camera AR: nằm rõ ràng phía trên thanh thông số kính */
+      /* Tầng điều khiển camera AR: nằm ngay trên thanh thông số bo 4 góc */
       .ar-camera-controls-layer {
-        bottom: 74px !important;
+        bottom: 78px !important;
         left: 10px !important;
-        right: 42px !important;
+        right: 10px !important;
+        width: auto !important;
+        gap: 8px !important;
       }
       .ar-tool-btn {
-        width: 28px !important;
-        height: 28px !important;
-        font-size: 11px !important;
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 11.5px !important;
         background: rgba(255, 255, 255, 0.92) !important;
         color: #0F172A !important;
         border: 1px solid rgba(0, 0, 0, 0.08) !important;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+        border-radius: 9px !important;
       }
       .ar-shutter-hero-btn {
         width: 48px !important;
@@ -2571,63 +2594,103 @@
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
       }
       .pip-camera-box, .pip-captured-box {
-        width: 42px !important;
-        height: 32px !important;
-        border-radius: 8px !important;
+        width: 44px !important;
+        height: 56px !important;
+        border-radius: 10px !important;
         border: 1.5px solid #FFFFFF !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
       }
       .pip-badge-text {
         display: none !important;
       }
 
-      /* Thanh thông số kính dưới đáy khung AR */
+      /* Thanh thông số kính dưới đáy khung AR: Thiết kế fit bo viền 4 góc hiện đại, fit vừa màn hình */
       .ar-bottom-specs-bar {
-        background: rgba(255, 255, 255, 0.97) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 0 0 20px 20px !important;
-        padding: 8px 10px !important;
-        min-height: 64px !important;
+        position: absolute !important;
+        bottom: 10px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        height: auto !important;
+        min-height: 56px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(24px) saturate(190%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+        border-radius: 18px !important;
+        padding: 8px 12px !important;
         box-sizing: border-box !important;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.16), 0 0 15px rgba(2, 132, 199, 0.12) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        z-index: 45 !important;
+      }
+      .specs-left-meta {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2px !important;
+      }
+      .specs-top-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
         gap: 6px !important;
       }
       .specs-title {
-        font-size: 12.5px !important;
+        font-size: 13px !important;
         font-weight: 800 !important;
         color: #0F172A !important;
-        max-width: 115px !important;
+        max-width: 140px !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
       }
+      .specs-pricing {
+        display: flex !important;
+        align-items: baseline !important;
+        gap: 4px !important;
+      }
       #ar-glass-sale {
-        font-size: 13.5px !important;
+        font-size: 13px !important;
         font-weight: 800 !important;
         color: #0284C7 !important;
       }
+      #ar-glass-old {
+        font-size: 9.5px !important;
+      }
       .specs-pill-row {
-        gap: 3px !important;
+        gap: 4px !important;
       }
       .spec-tag-item {
         font-size: 8.5px !important;
-        padding: 1px 5px !important;
+        padding: 1px 6px !important;
+        border-radius: 6px !important;
       }
       .specs-actions-group {
-        gap: 4px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
       }
       .btn-specs-order {
-        padding: 6px 9px !important;
-        font-size: 11px !important;
-        border-radius: 9999px !important;
+        padding: 7px 11px !important;
+        font-size: 11.5px !important;
+        border-radius: 12px !important;
         background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%) !important;
-        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3) !important;
+        box-shadow: 0 3px 10px rgba(2, 132, 199, 0.35) !important;
+        cursor: pointer !important;
       }
       .btn-specs-zalo {
-        padding: 6px 8px !important;
-        font-size: 10.5px !important;
-        border-radius: 9999px !important;
+        padding: 7px 10px !important;
+        font-size: 11px !important;
+        border-radius: 12px !important;
+        background: #0068FF !important;
+        cursor: pointer !important;
       }
 
       /* Màn hình phát nhạc Liquid Music khi xem trong khung Duo */
@@ -3293,6 +3356,7 @@
       <button onclick="openOrdersManagerModal()" class="nav-btn-link nav-btn-orders" title="Đơn hàng đã đặt">
         <span>🛒</span>
         <span class="nav-btn-label">Đơn hàng</span>
+        <span class="nav-orders-badge" id="nav-orders-badge" style="display:none;">0</span>
       </button>
       <a href="index.html" class="nav-btn-link" title="Trang chủ shop">
         <span class="nav-btn-label">Shop</span>
@@ -3402,14 +3466,18 @@
                   <div class="soundscape-disc-ring ring-2"></div>
                   <div class="soundscape-disc-ring ring-3"></div>
                   <div class="cover-fallback-inner">
-                    <div class="soundscape-centerpiece" title="Spatial Sound Aura">
-                      <div class="sound-wave-bars">
-                        <span class="sw-bar bar-1"></span>
-                        <span class="sw-bar bar-2"></span>
-                        <span class="sw-bar bar-3"></span>
-                        <span class="sw-bar bar-4"></span>
-                        <span class="sw-bar bar-5"></span>
-                      </div>
+                    <div class="soundscape-centerpiece" id="soundscape-centerpiece" title="Phát nhạc Fashion Lounge">
+                      <svg class="soundscape-note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18V5l12-2v13" stroke="url(#noteGrad)" stroke-width="2.2"></path>
+                        <circle cx="6" cy="18" r="3" fill="url(#noteGrad)"></circle>
+                        <circle cx="18" cy="16" r="3" fill="url(#noteGrad)"></circle>
+                        <defs>
+                          <linearGradient id="noteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38BDF8"/>
+                            <stop offset="100%" stop-color="#818CF8"/>
+                          </linearGradient>
+                        </defs>
+                      </svg>
                     </div>
                     <div class="soundscape-badge">SPATIAL AUDIO</div>
                   </div>
@@ -3442,7 +3510,7 @@
                 <span class="cta-open-ar-title">👓 Thử kính AR</span>
               </button>
 
-              <!-- Tracklist (4 bài mặc định từ thư mục Music) -->
+              <!-- Tracklist (3 bài mặc định từ thư mục Music) -->
               <div class="album-track-list">
                 <div class="track-row playing" onclick="playTrack(1)">
                   <div class="track-left">
@@ -3452,28 +3520,21 @@
                       <div class="eq-bar"></div>
                       <div class="eq-bar"></div>
                     </div>
-                    <span class="track-name-text">Nothing's Gonna Change My Love For You</span>
+                    <span class="track-name-text">Killing Me Softly With His Song</span>
                   </div>
                 </div>
 
                 <div class="track-row" onclick="playTrack(2)">
                   <div class="track-left">
                     <span class="track-num">2</span>
-                    <span class="track-name-text">Killing Me Softly With His Song</span>
+                    <span class="track-name-text">Saving All My Love For You</span>
                   </div>
                 </div>
 
                 <div class="track-row" onclick="playTrack(3)">
                   <div class="track-left">
                     <span class="track-num">3</span>
-                    <span class="track-name-text">Saving All My Love For You</span>
-                  </div>
-                </div>
-
-                <div class="track-row" onclick="playTrack(4)">
-                  <div class="track-left">
-                    <span class="track-num">4</span>
-                    <span class="track-name-text">Em Là Không Thể</span>
+                    <span class="track-name-text">I Will Always Love You</span>
                   </div>
                 </div>
               </div>
@@ -3487,7 +3548,7 @@
                     <img src="" id="mini-thumb-img" alt="" onerror="this.parentElement.style.background='linear-gradient(135deg,#0EA5E9,#0284C7)'">
                   </div>
                   <div class="mini-meta">
-                    <div class="mini-title">Nothing's Gonna Change My Love For You</div>
+                    <div class="mini-title">Killing Me Softly With His Song</div>
                     <div class="mini-artist">Fashion Lounge</div>
                   </div>
                 </div>
@@ -3551,7 +3612,7 @@
                   <!-- Khung so sánh PiP: Ảnh Gốc & Ảnh Chụp Cạnh Nhau Ở Bên Phải -->
                   <div class="pip-group-dock">
                     <div class="pip-camera-box" id="pip-camera-box" onclick="togglePipExpand()" title="Xem camera gốc không kính (bấm để phóng to/thu nhỏ)">
-                      <canvas id="pip-canvas" width="160" height="110"></canvas>
+                      <canvas id="pip-canvas" width="120" height="150"></canvas>
                       <div class="pip-badge-text">Ảnh Gốc</div>
                     </div>
 
@@ -4409,6 +4470,10 @@ function doPost(e) {
       document.querySelectorAll('.eq-bars').forEach(eq => {
         eq.style.opacity = isLive ? '1' : '0.4';
       });
+      const centerpiece = document.getElementById('soundscape-centerpiece');
+      const artHero = document.getElementById('music-art-hero');
+      if (centerpiece) centerpiece.classList.toggle('playing', !!isLive);
+      if (artHero) artHero.classList.toggle('playing', !!isLive);
     }
 
     function shuffleTracks() {
@@ -5102,6 +5167,60 @@ function doPost(e) {
     let currentCheckoutGlass = null;
     let selectedPayment = 'cod';
 
+    function updateOrdersBadge() {
+      try {
+        const orders = JSON.parse(localStorage.getItem('SR89_ORDER_LOGS') || '[]');
+        const count = orders.length;
+        const badge = document.getElementById('nav-orders-badge');
+        if (badge) {
+          badge.innerText = count;
+          badge.style.display = count > 0 ? 'inline-flex' : 'none';
+          badge.classList.remove('badge-pop');
+          void badge.offsetWidth;
+          badge.classList.add('badge-pop');
+          setTimeout(() => badge.classList.remove('badge-pop'), 400);
+        }
+        const modalBadge = document.getElementById('orders-count-badge');
+        if (modalBadge) {
+          modalBadge.innerHTML = `📦 ${count} mặt hàng đã đặt`;
+        }
+      } catch (e) {
+        console.warn('Orders badge error:', e);
+      }
+    }
+
+    function addGlassToOrder(glass) {
+      if (!glass) glass = PRODUCTS[selectedGlassIndex] || PRODUCTS[0];
+      try {
+        const orders = JSON.parse(localStorage.getItem('SR89_ORDER_LOGS') || '[]');
+        const orderCode = 'SR89-' + Math.floor(10000 + Math.random() * 90000);
+        const timestamp = new Date().toLocaleString('vi-VN');
+        const paymentName = selectedPayment === 'vietqr' ? 'Chuyển khoản VietQR' : 'Nhận hàng trả tiền (COD)';
+        const orderPayload = {
+          orderCode,
+          timestamp,
+          name: document.getElementById('cust-name')?.value?.trim() || 'Khách hàng',
+          phone: document.getElementById('cust-phone')?.value?.trim() || '0987251051',
+          address: document.getElementById('cust-address')?.value?.trim() || 'Đang chọn kính online',
+          note: document.getElementById('cust-note')?.value?.trim() || 'Đặt mua từ web',
+          glassName: glass.name,
+          glassPrice: glass.salePrice || '400.000 ₫',
+          glassSize: glass.size || '49-17-130',
+          glassMaterial: glass.material || 'Titanium cao cấp',
+          glassThumb: glass.actualPhoto || glass.src || 'Rayban.png',
+          payment: paymentName,
+          zaloUrl: `https://zalo.me/0987251051?text=${encodeURIComponent('Chào Shop SR89 Optic, tôi muốn đặt kính ' + glass.name + ' (' + (glass.salePrice || '400.000 ₫') + ')')}`
+        };
+        orders.unshift(orderPayload);
+        localStorage.setItem('SR89_ORDER_LOGS', JSON.stringify(orders));
+        updateOrdersBadge();
+        playSynthTone(920, 0.12, 'sine', 0.15);
+        showToast(`🛒 Đã thêm "${glass.name}" vào Đơn hàng (${orders.length})!`);
+      } catch (e) {
+        console.warn('Add glass to orders error:', e);
+      }
+    }
+
     function openCheckoutModalForCurrent() {
       const active = PRODUCTS[selectedGlassIndex] || PRODUCTS[0];
       openCheckoutModalWithGlass(active);
@@ -5114,6 +5233,7 @@ function doPost(e) {
 
     function openCheckoutModalWithGlass(glass) {
       currentCheckoutGlass = glass;
+      addGlassToOrder(glass);
       const modal = document.getElementById('checkout-modal-backdrop');
       const form = document.getElementById('checkout-form-container');
       const success = document.getElementById('order-success-container');
@@ -5473,6 +5593,7 @@ function doPost(e) {
       orders.splice(idx, 1);
       localStorage.setItem('SR89_ORDER_LOGS', JSON.stringify(orders));
       renderOrdersManagerList();
+      updateOrdersBadge();
       showToast(`🗑️ Đã hủy đơn hàng ${ord.orderCode}!`);
 
       // Gợi ý thông báo hủy đơn cho chủ shop 0987251051 qua Zalo
@@ -5534,6 +5655,7 @@ function doPost(e) {
       if (confirm('Bạn có chắc muốn xóa lịch sử đơn hàng đã lưu trên trình duyệt?')) {
         localStorage.removeItem('SR89_ORDER_LOGS');
         renderOrdersManagerList();
+        updateOrdersBadge();
         showToast('🗑️ Đã xóa lịch sử đơn hàng');
       }
     }
@@ -5554,13 +5676,86 @@ function doPost(e) {
       }, 3200);
     }
 
-    // LIVE CLOCK & DATE UPDATE
+    // REAL-TIME WEATHER FETCH VIA OPEN-METEO API
+    async function fetchLiveWeather() {
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=21.0285&longitude=105.8542&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FBangkok');
+        if (!res.ok) throw new Error('API request failed');
+        const data = await res.json();
+        const cur = data.current;
+        const daily = data.daily;
+        const temp = Math.round(cur.temperature_2m);
+        const humidity = cur.relative_humidity_2m;
+        const isDay = cur.is_day === 1;
+        const code = cur.weather_code;
+        const maxTemp = daily?.temperature_2m_max ? Math.round(daily.temperature_2m_max[0]) : temp + 4;
+        const minTemp = daily?.temperature_2m_min ? Math.round(daily.temperature_2m_min[0]) : temp - 5;
+
+        let emoji = isDay ? '☀️' : '🌙';
+        let desc = isDay ? 'Nắng đẹp trời quang' : 'Đêm quang đãng';
+
+        if (code === 1 || code === 2) {
+          emoji = isDay ? '🌤️' : '☁️';
+          desc = isDay ? 'Ít mây trời mát' : 'Đêm ít mây';
+        } else if (code === 3) {
+          emoji = '☁️';
+          desc = 'Trời nhiều mây';
+        } else if (code >= 45 && code <= 48) {
+          emoji = '🌫️';
+          desc = 'Có sương mù nhẹ';
+        } else if (code >= 51 && code <= 67) {
+          emoji = '🌧️';
+          desc = 'Có mưa rào rải rác';
+        } else if (code >= 80 && code <= 82) {
+          emoji = '🌦️';
+          desc = 'Mưa rào từng cơn';
+        } else if (code >= 95) {
+          emoji = '⛈️';
+          desc = 'Có dông sét';
+        }
+
+        const tempEl = document.getElementById('weather-temp-hero');
+        if (tempEl) tempEl.innerText = `${temp}°`;
+        const emojiEl = document.getElementById('weather-emoji-hero');
+        if (emojiEl) emojiEl.innerText = emoji;
+        const descEl = document.getElementById('weather-cond-desc');
+        if (descEl) descEl.innerText = `${desc} • Độ ẩm ${humidity}%`;
+        const metaEl = document.querySelector('.weather-meta-row');
+        if (metaEl) {
+          metaEl.innerHTML = `<span>Cao: ${maxTemp}°</span><span>Thấp: ${minTemp}°</span><span>Độ ẩm: ${humidity}%</span>`;
+        }
+        const miniPill = document.getElementById('weather-mini-pill');
+        if (miniPill) {
+          miniPill.innerHTML = `<span>${emoji} ${temp}°</span>`;
+        }
+      } catch (err) {
+        console.warn('Real-time weather fallback:', err);
+        const now = new Date();
+        const h = now.getHours();
+        const isNight = h < 6 || h >= 18;
+        const simTemp = isNight ? 26 : (h >= 11 && h <= 15 ? 32 : 29);
+        const simEmoji = isNight ? '🌙' : '🌤️';
+        const simDesc = isNight ? 'Đêm mát mẻ' : 'Nắng đẹp trời mát';
+        const tempEl = document.getElementById('weather-temp-hero');
+        if (tempEl) tempEl.innerText = `${simTemp}°`;
+        const emojiEl = document.getElementById('weather-emoji-hero');
+        if (emojiEl) emojiEl.innerText = simEmoji;
+        const descEl = document.getElementById('weather-cond-desc');
+        if (descEl) descEl.innerText = `${simDesc} • Độ ẩm 78%`;
+      }
+    }
+
+    // LIVE CLOCK & DATE UPDATE (REAL-TIME TICKING)
+    let clockTickState = false;
     function updateLiveClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
+      clockTickState = !clockTickState;
       const clockEl = document.getElementById('live-clock-time');
-      if (clockEl) clockEl.innerText = `${h}:${m}`;
+      if (clockEl) {
+        clockEl.innerHTML = `${h}<span style="opacity:${clockTickState ? '1' : '0.25'}; transition:opacity 0.2s;">:</span>${m}`;
+      }
 
       const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
       const dayName = days[now.getDay()];
@@ -5712,7 +5907,23 @@ function doPost(e) {
       }
 
       if (results.image && pipCtx) {
-        pipCtx.drawImage(results.image, 0, 0, pipCanvas.width, pipCanvas.height);
+        const pw = pipCanvas.width;
+        const ph = pipCanvas.height;
+        const pAspect = pw / (ph || 1);
+        let pCropW, pCropH, pCropX, pCropY;
+        if (videoAspect > pAspect) {
+          pCropH = vH;
+          pCropW = pCropH * pAspect;
+          pCropX = (vW - pCropW) / 2;
+          pCropY = 0;
+        } else {
+          pCropW = vW;
+          pCropH = pCropW / pAspect;
+          pCropX = 0;
+          pCropY = (vH - pCropH) / 2;
+        }
+        pipCtx.clearRect(0, 0, pw, ph);
+        pipCtx.drawImage(results.image, pCropX, pCropY, pCropW, pCropH, 0, 0, pw, ph);
       }
 
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
@@ -6098,6 +6309,9 @@ function doPost(e) {
     document.addEventListener('DOMContentLoaded', () => {
       updateLiveClock();
       setInterval(updateLiveClock, 1000);
+      updateOrdersBadge();
+      fetchLiveWeather();
+      setInterval(fetchLiveWeather, 600000); // Tự động cập nhật thời tiết mỗi 10 phút
       preloadAllImages();
       renderQuickCategories();
       renderAppGrid();
