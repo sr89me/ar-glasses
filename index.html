@@ -2023,34 +2023,97 @@
     .bg-music-toggle { background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%) !important; }
 
     /* ==========================================================================
-       5. MOBILE ADAPTIVE RESPONSIVE OPTIMIZATION
+       5. MOBILE ADAPTIVE RESPONSIVE OPTIMIZATION (CHUẨN TỐI GIẢN NHƯ INDEX.HTML)
        ========================================================================== */
-    /* Mobile Screen Toggle Bar (Only visible on small screens) */
+    /* Mobile Screen Toggle Bar (Chỉ hiển thị trên màn hình nhỏ) */
     .mobile-tab-switcher {
       display: none;
       justify-content: center;
-      gap: 8px;
-      padding: 6px 12px;
-      background: rgba(0, 0, 0, 0.4);
+      gap: 4px;
+      padding: 4px;
+      background: #F1F5F9;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 9999px;
       z-index: 95;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      max-width: 440px;
+      margin: 6px auto 2px;
+      width: calc(100% - 20px);
+      box-sizing: border-box;
     }
     .mobile-tab-btn {
       flex: 1;
-      max-width: 170px;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 9999px;
+      font-size: 11.5px;
       font-weight: 700;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #64748B;
+      background: transparent;
+      border: none;
       cursor: pointer;
       text-align: center;
+      font-family: var(--font-main);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
     }
     .mobile-tab-btn.active {
+      background: #FFFFFF !important;
+      color: #0284C7 !important;
+      font-weight: 800 !important;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    /* Thanh phân loại cuộn ngang trong Grid Kính */
+    .grid-cat-scroll-wrap {
+      display: none;
+      overflow-x: auto;
+      padding: 2px 0 10px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      -webkit-overflow-scrolling: touch;
+      flex-shrink: 0;
+    }
+    .grid-cat-scroll-wrap::-webkit-scrollbar { display: none; }
+    .grid-cat-scroll-wrap .cat-btn-group {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .grid-cat-scroll-wrap .cat-toggle-btn {
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .grid-cat-scroll-wrap .cat-toggle-btn.active {
       background: #0284C7;
-      border-color: #fff;
-      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+      border-color: #0284C7;
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+    }
+    .grid-cat-scroll-wrap .cat-toggle-btn .count {
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.06);
+    }
+    .grid-cat-scroll-wrap .cat-toggle-btn.active .count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #FFFFFF;
     }
 
     /* Music Upload Toolbar */
@@ -2086,41 +2149,117 @@
       transform: translateY(-1px);
     }
 
-    @media (max-width: 1120px) {
+    @media (min-width: 769px) and (max-width: 1120px) {
       .col-left-panel {
-        display: none !important; /* Hide weather widget on medium screens to keep Duo + Catalog side-by-side */
+        display: none !important; /* Hide weather widget on medium desktop to keep Duo + Catalog side-by-side */
       }
       .col-center-panel {
         margin: 0;
       }
     }
 
-    @media (max-width: 680px) {
+    /* ==========================================================================
+       GIAO DIỆN ĐIỆN THOẠI (<= 768px): TỐI GIẢN NHƯ PHIÊN BẢN INDEX.HTML
+       ========================================================================== */
+    @media (max-width: 768px) {
+      html, body {
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+      body {
+        background: #FAF8F5 !important; /* Nền be kem sáng nhẹ nhàng, dịu mắt chuẩn index.html */
+        perspective: none !important;
+        overflow: hidden !important;
+      }
+
+      .ambient-orb {
+        display: none !important; /* Tắt quả cầu làm mờ để đạt 60fps mượt mà */
+      }
+
+      /* Thanh điều hướng đầu trang tối giản chuẩn index.html */
       .top-system-nav {
-        height: 38px;
+        height: 44px;
         padding: 0 10px;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        background: rgba(255, 255, 255, 0.96) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
       }
       .nav-badge-pill,
+      .duo-mode-segmented-pill,
       .duo-gesture-hint-pill,
       #weather-mini-pill {
-        display: none !important;
+        display: none !important; /* Chỉ hiện Duo khi gập trên điện thoại, ẩn nút mở ngang desktop */
       }
       .nav-brand-title {
-        font-size: 13.5px;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+        color: #1D1D1F;
+        white-space: nowrap;
       }
-      .duo-mode-segmented-pill .seg-btn {
-        padding: 3px 8px;
-        font-size: 10px;
+      .nav-right-group {
+        gap: 6px;
+        flex-shrink: 0;
       }
+      .nav-right-group .nav-btn-link {
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+        border-radius: 9999px !important;
+        border-color: rgba(0, 0, 0, 0.08);
+        white-space: nowrap !important;
+      }
+      .nav-right-group button.nav-btn-link {
+        background: #DCFCE7 !important;
+        border: 1px solid #10B981 !important;
+        color: #065F46 !important;
+        font-weight: 700 !important;
+      }
+
+      /* Thanh chuyển Tab trên điện thoại */
       .mobile-tab-switcher {
-        display: flex;
+        display: flex !important;
+        width: calc(100% - 20px) !important;
+        max-width: 370px !important;
+        margin: 5px auto 2px !important;
+        padding: 3px !important;
+        gap: 3px !important;
+        box-sizing: border-box !important;
+        flex-shrink: 0 !important;
       }
+      .mobile-tab-btn {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        padding: 6px 4px !important;
+        font-size: 11.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
       .app-workspace {
-        flex-direction: column;
-        align-items: center;
-        overflow-y: auto;
-        padding: 6px 8px 12px;
-        gap: 10px;
+        flex-direction: column !important;
+        align-items: center !important;
+        overflow: hidden !important;
+        padding: 4px 10px 8px !important;
+        gap: 8px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        perspective: none !important;
+        transform-style: flat !important;
+      }
+
+      /* Khung 3 cột: Chỉ hiện 1 cột active tương ứng với Tab được chọn */
+      .col-center-panel.mobile-hidden,
+      .col-right-panel.mobile-hidden,
+      .col-left-panel.mobile-hidden {
+        display: none !important;
       }
       .col-center-panel.mobile-hidden {
         position: absolute !important;
@@ -2128,41 +2267,490 @@
         opacity: 0 !important;
         pointer-events: none !important;
       }
-      .col-right-panel.mobile-hidden {
+
+      .col-center-panel {
+        width: 100% !important;
+        max-width: 440px !important;
+        margin: 0 auto !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      /* ----------------------------------------------------------------------
+         KHUNG THIẾT BỊ IPHONE DUO KHI GẬP TRÊN MOBILE:
+         TỐI GIẢN TOÀN BỘ, BỎ BẢN LỀ ĐEN CỒNG KỀNH, MÀU TRẮNG SÁNG NHẸ NHÀNG
+         ---------------------------------------------------------------------- */
+      .app-workspace.mode-folded .foldable-duo-device,
+      .app-workspace.mode-unfolded .foldable-duo-device {
+        width: 100% !important;
+        max-width: 440px !important;
+        height: calc(100dvh - 134px) !important;
+        max-height: 640px !important;
+        min-height: 480px !important;
+        aspect-ratio: auto !important;
+        background: #FFFFFF !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 20px !important;
+        padding: 0 !important; /* Xóa bỏ padding 18px đen của bản lề cũ */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+        overflow: hidden !important;
+        transform: none !important;
+      }
+
+      /* Ẩn bản lề đen skeuomorphic trên điện thoại */
+      .app-workspace.mode-folded .foldable-hinge-spine,
+      .app-workspace.mode-unfolded .foldable-hinge-spine {
         display: none !important;
       }
-      .col-center-panel {
-        width: 100%;
-        max-width: 354px;
-      }
-      .app-workspace.mode-unfolded .foldable-duo-device,
-      .app-workspace.mode-folded .foldable-duo-device {
+
+      .app-workspace.mode-folded .duo-left-half,
+      .app-workspace.mode-unfolded .duo-left-half {
         width: 100% !important;
-        max-width: 354px !important;
-        height: auto !important;
-        min-height: 480px !important;
-        max-height: 72vh !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        flex: 1 1 100% !important;
+        height: 100% !important;
+        border-radius: 20px !important;
+        overflow: hidden !important;
+        position: relative !important;
       }
+
+      .app-workspace.mode-folded .duo-left-half .foldable-screen-viewport,
+      .app-workspace.mode-unfolded .duo-left-half .foldable-screen-viewport {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 20px !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: #FFFFFF !important;
+      }
+
+      /* Ẩn hoàn toàn nửa phải khi ở chế độ gập trên mobile */
+      .duo-right-half {
+        display: none !important;
+      }
+
+      /* Floating Action Pill bên phải gọn gàng, không che khuất mặt khi soi gương */
+      .duo-right-action-pill {
+        top: 50px !important;
+        right: 8px !important;
+        bottom: auto !important;
+        width: 32px !important;
+        padding: 5px 3px !important;
+        border-radius: 16px !important;
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+        gap: 5px !important;
+      }
+      .duo-pill-section {
+        gap: 4px !important;
+      }
+      .duo-pill-btn {
+        width: 25px !important;
+        height: 25px !important;
+        font-size: 11px !important;
+        background: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        color: #0F172A !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+      }
+      .duo-pill-btn:hover, .duo-pill-btn:active {
+        background: #0284C7 !important;
+        color: #FFFFFF !important;
+        border-color: #0284C7 !important;
+      }
+
+      /* Màn hình AR trong khung Duo khi gập */
+      .ar-screen-top-bar {
+        top: 8px !important;
+        left: 10px !important;
+        right: 46px !important;
+        gap: 6px !important;
+      }
+      .btn-back-to-music {
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+        border-radius: 9999px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        color: #0F172A !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+      }
+      #ai-face-badge-pill {
+        padding: 3px 8px !important;
+        font-size: 10px !important;
+        border-radius: 9999px !important;
+        max-width: 140px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+
+      /* Tầng điều khiển camera AR: nằm rõ ràng phía trên thanh thông số kính */
+      .ar-camera-controls-layer {
+        bottom: 74px !important;
+        left: 10px !important;
+        right: 42px !important;
+      }
+      .ar-tool-btn {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 11px !important;
+        background: rgba(255, 255, 255, 0.92) !important;
+        color: #0F172A !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+      }
+      .ar-shutter-hero-btn {
+        width: 48px !important;
+        height: 48px !important;
+        border: 3px solid #FFFFFF !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+      }
+      .pip-camera-box, .pip-captured-box {
+        width: 42px !important;
+        height: 32px !important;
+        border-radius: 8px !important;
+        border: 1.5px solid #FFFFFF !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+      }
+      .pip-badge-text {
+        display: none !important;
+      }
+
+      /* Thanh thông số kính dưới đáy khung AR */
+      .ar-bottom-specs-bar {
+        background: rgba(255, 255, 255, 0.97) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 0 0 20px 20px !important;
+        padding: 8px 10px !important;
+        min-height: 64px !important;
+        box-sizing: border-box !important;
+        gap: 6px !important;
+      }
+      .specs-title {
+        font-size: 12.5px !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+        max-width: 115px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+      #ar-glass-sale {
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+        color: #0284C7 !important;
+      }
+      .specs-pill-row {
+        gap: 3px !important;
+      }
+      .spec-tag-item {
+        font-size: 8.5px !important;
+        padding: 1px 5px !important;
+      }
+      .specs-actions-group {
+        gap: 4px !important;
+      }
+      .btn-specs-order {
+        padding: 6px 9px !important;
+        font-size: 11px !important;
+        border-radius: 9999px !important;
+        background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%) !important;
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3) !important;
+      }
+      .btn-specs-zalo {
+        padding: 6px 8px !important;
+        font-size: 10.5px !important;
+        border-radius: 9999px !important;
+      }
+
+      /* Màn hình phát nhạc Liquid Music khi xem trong khung Duo */
+      .duo-music-screen {
+        padding: 12px 14px 20px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      .btn-custom-music-upload, .btn-custom-cover-upload {
+        background: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        color: #0F172A !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+      }
+      .music-art-hero {
+        width: 140px !important;
+        height: 140px !important;
+        border-radius: 18px !important;
+        margin: 6px auto 10px !important;
+        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1) !important;
+      }
+      .cta-open-ar-banner {
+        margin: 8px 0 !important;
+        padding: 10px 12px !important;
+        border-radius: 14px !important;
+        background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%) !important;
+        border: none !important;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3) !important;
+      }
+      .cta-open-ar-title {
+        font-size: 12px !important;
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+      }
+      .cta-open-ar-sub {
+        font-size: 10px !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+      }
+      .album-track-list {
+        max-height: 180px !important;
+        overflow-y: auto !important;
+      }
+      .track-left {
+        flex: 1 !important;
+        min-width: 0 !important;
+      }
+      .track-name-text {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        display: block !important;
+      }
+
+      /* ----------------------------------------------------------------------
+         DANH MỤC KÍNH (COL-RIGHT-PANEL): KHUNG TRẮNG TỐI GIẢN CHUẨN INDEX.HTML
+         ---------------------------------------------------------------------- */
       .col-right-panel {
-        width: 100%;
+        width: 100% !important;
+        max-width: 440px !important;
+        margin: 0 auto !important;
+        max-height: calc(100dvh - 134px) !important;
+        height: calc(100dvh - 134px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 0 2px 40px !important;
+        box-sizing: border-box !important;
       }
+      .col-right-panel::-webkit-scrollbar,
+      .col-left-panel::-webkit-scrollbar,
+      .squircle-app-grid::-webkit-scrollbar {
+        width: 3px !important;
+      }
+      .col-right-panel::-webkit-scrollbar-thumb,
+      .col-left-panel::-webkit-scrollbar-thumb,
+      .squircle-app-grid::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15) !important;
+        border-radius: 9999px !important;
+      }
+      .col-right-panel .grid-panel-container {
+        background: #FFFFFF !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        padding: 12px 14px 24px !important;
+        min-height: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      .grid-top-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        margin-bottom: 8px !important;
+      }
+      .grid-brand-title {
+        font-size: 15px !important;
+        font-weight: 800 !important;
+        justify-content: space-between !important;
+      }
+      .grid-search-input-wrap {
+        width: 100% !important;
+        border-radius: 9999px !important;
+        padding: 7px 14px !important;
+        border: 1px solid #CBD5E1 !important;
+        background: #F8FAFC !important;
+        box-sizing: border-box !important;
+      }
+      .grid-cat-scroll-wrap {
+        display: block !important;
+      }
+
+      /* Lưới kính 2 cột tối giản, thoáng mắt giống index.html */
+      .app-workspace.mode-folded .col-right-panel .squircle-app-grid,
+      .app-workspace.mode-unfolded .squircle-app-grid,
+      .col-right-panel .squircle-app-grid,
       .squircle-app-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px 8px;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        padding: 4px 2px 40px !important;
+        overflow-y: auto !important;
+      }
+      .glass-app-item {
+        background: #F8FAFC !important;
+        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        border-radius: 16px !important;
+        padding: 10px 8px !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
+        transition: all 0.2s ease !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+      }
+      .glass-app-item.selected {
+        border-color: #0284C7 !important;
+        background: #F0F9FF !important;
+        box-shadow: 0 0 0 2px #0284C7, 0 4px 12px rgba(2, 132, 199, 0.15) !important;
       }
       .app-icon-squircle {
-        width: 68px;
-        height: 68px;
+        width: 100% !important;
+        height: 85px !important;
+        border-radius: 12px !important;
+        background: #FFFFFF !important;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+        border: none !important;
+        padding: 4px !important;
+        box-sizing: border-box !important;
+      }
+      .app-icon-title {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #1D1D1F !important;
+        max-width: 100% !important;
+        margin-top: 6px !important;
+        white-space: normal !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        min-height: 31px !important;
+        line-height: 1.3 !important;
+        text-align: center !important;
+      }
+      .app-specs-pill-badge {
+        font-size: 9.5px !important;
+        background: #E0F2FE !important;
+        color: #0369A1 !important;
+        border: 1px solid #BAE6FD !important;
+        border-radius: 6px !important;
+        padding: 2px 6px !important;
+        max-width: 100% !important;
+        margin-top: 3px !important;
+        text-align: center !important;
+      }
+      .app-icon-price {
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        color: #0284C7 !important;
+        margin-top: 3px !important;
+        text-align: center !important;
+      }
+      .btn-card-quick-order {
+        margin-top: 6px !important;
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        border-radius: 9999px !important;
+        width: 100% !important;
+        background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25) !important;
+      }
+
+      /* ----------------------------------------------------------------------
+         THỜI TIẾT & LỜI KHUYÊN UV (COL-LEFT-PANEL): KHUNG TRẮNG TỐI GIẢN
+         ---------------------------------------------------------------------- */
+      .col-left-panel {
+        display: flex !important;
+        width: 100% !important;
+        max-width: 440px !important;
+        margin: 0 auto !important;
+        max-height: calc(100dvh - 134px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        padding: 0 2px 40px !important;
+        box-sizing: border-box !important;
+      }
+      .liquid-weather-widget {
+        background: #FFFFFF !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        padding: 16px !important;
+      }
+      .weather-location-pill {
+        background: #E0F2FE !important;
+        color: #0369A1 !important;
+        border: 1px solid #BAE6FD !important;
+        border-radius: 9999px !important;
+        padding: 2px 8px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        display: inline-block !important;
+      }
+      .quick-category-box {
+        background: #FFFFFF !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        padding: 14px !important;
+      }
+      .cat-box-heading {
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        margin-bottom: 10px !important;
+      }
+      .cat-btn-group {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+      }
+      .cat-toggle-btn {
+        padding: 8px 12px !important;
+        border-radius: 12px !important;
+        font-size: 12px !important;
+        border: 1px solid #E2E8F0 !important;
+        background: #F8FAFC !important;
+      }
+      .cat-toggle-btn.active {
+        background: #0284C7 !important;
+        border-color: #0284C7 !important;
+        color: #FFFFFF !important;
+      }
+
+      /* Thanh dock thương hiệu dưới cùng */
+      .app-dock-bar {
+        padding: 3px 6px 6px !important;
       }
       .liquid-floating-dock {
-        padding: 5px 8px;
-        gap: 6px;
-        overflow-x: auto;
-        max-width: 96vw;
+        background: rgba(255, 255, 255, 0.96) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 9999px !important;
+        padding: 4px 8px !important;
+        gap: 6px !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+        max-width: calc(100vw - 20px) !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
       }
+      .liquid-floating-dock::-webkit-scrollbar { display: none; }
       .dock-icon-box {
-        width: 38px;
-        height: 38px;
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 10px !important;
       }
     }
 
@@ -2502,7 +3090,7 @@
   <header class="top-system-nav">
     <div class="nav-brand-group">
       <div style="font-size: 16px;">⚡</div>
-      <span class="nav-brand-title">SR89 Optic Duo Studio</span>
+      <span class="nav-brand-title">SR89 Optic</span>
       <span class="nav-badge-pill">Foldable Edition</span>
     </div>
 
@@ -2525,18 +3113,19 @@
       <div id="weather-mini-pill" style="font-size: 11.5px; font-weight: 700; color: #FFD60A; display: flex; align-items: center; gap: 4px;">
         <span>☀️ 29°C Hà Nội</span>
       </div>
-      <button onclick="openOrdersManagerModal()" class="nav-btn-link" style="background: rgba(16,185,129,0.22); border: 1.5px solid #10B981; color: #A7F3D0; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px;" title="Xem các mặt hàng đã đặt & hủy đơn nếu đổi ý">
+      <button onclick="openOrdersManagerModal()" class="nav-btn-link" style="background: rgba(16,185,129,0.22); border: 1.5px solid #10B981; color: #065F46; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="Xem các mặt hàng đã đặt & hủy đơn nếu đổi ý">
         <span>🛒</span>
-        <span>Đơn Hàng Đã Đặt</span>
+        <span>Đơn Hàng</span>
       </button>
-      <a href="index.html" class="nav-btn-link">Trang Chủ Shop</a>
+      <a href="index.html" class="nav-btn-link">Trang Chủ</a>
     </div>
   </header>
 
-  <!-- Mobile Screen Switcher (Only appears on mobile devices <= 680px) -->
-  <div class="mobile-tab-switcher">
-    <button class="mobile-tab-btn active" id="btn-tab-device" onclick="switchMobileTab('device')">📱 Màn Hình Gập Duo</button>
-    <button class="mobile-tab-btn" id="btn-tab-grid" onclick="switchMobileTab('grid')">👓 Danh Mục Kính</button>
+  <!-- Mobile Screen Switcher (Tối giản chuẩn index.html) -->
+  <div class="mobile-tab-switcher" id="mobile-tab-switcher">
+    <button class="mobile-tab-btn active" id="btn-tab-device" onclick="switchMobileTab('device')">📱 Gương AR</button>
+    <button class="mobile-tab-btn" id="btn-tab-grid" onclick="switchMobileTab('grid')">👓 Chọn Kính</button>
+    <button class="mobile-tab-btn" id="btn-tab-weather" onclick="switchMobileTab('weather')">🌤️ Thời Tiết</button>
   </div>
 
   <!-- Main Workspace: Chuyển đổi linh hoạt giữa Unfolded (Dual-Screen) và Folded (Cover Screen) -->
@@ -2545,7 +3134,7 @@
     <!-- ====================================================================
          CỘT NGOÀI TRÁI: DÙNG TRONG CHẾ ĐỘ GẬP (FOLDED)
          ==================================================================== -->
-    <aside class="col-left-panel" id="col-left-panel">
+    <aside class="col-left-panel mobile-hidden" id="col-left-panel">
       <!-- Exterior Weather Slot -->
       <div class="ext-weather-slot" id="ext-weather-slot">
         <!-- Weather Card Widget -->
@@ -2856,7 +3445,7 @@
     <!-- ====================================================================
          CỘT NGOÀI PHẢI: DÙNG TRONG CHẾ ĐỘ GẬP (FOLDED)
          ==================================================================== -->
-    <section class="col-right-panel" id="col-right-panel">
+    <section class="col-right-panel mobile-hidden" id="col-right-panel">
       <div class="ext-grid-slot" id="ext-grid-slot">
         <!-- Khung Tất Cả Kính & Ô Tìm Kiếm -->
         <div class="grid-panel-container" id="glasses-grid-node">
@@ -2870,6 +3459,11 @@
               <span style="font-size: 11px;">🔍</span>
               <input type="text" id="glass-search" placeholder="Tìm kính..." oninput="handleSearch(this.value)">
             </div>
+          </div>
+
+          <!-- Quick Category Filter Bar for Mobile / Grid -->
+          <div class="grid-cat-scroll-wrap" id="grid-cat-scroll-wrap">
+            <div class="cat-btn-group" id="grid-cat-btn-group"></div>
           </div>
 
           <!-- App Grid of Squircles with PURE WHITE BACKGROUND -->
@@ -3830,7 +4424,7 @@ function doPost(e) {
         card.onclick = () => {
           selectGlass(globalIdx);
           toggleScreenMode('ar');
-          if (window.innerWidth <= 680) {
+          if (window.innerWidth <= 768) {
             switchMobileTab('device');
           }
         };
@@ -3944,6 +4538,10 @@ function doPost(e) {
     // D2. CHUYỂN ĐỔI CHẾ ĐỘ IPHONE DUO: MỞ NGANG DUAL-SCREEN VS GẬP COVER SCREEN
     // --------------------------------------------------------------------------
     function setDuoMode(mode) {
+      // Trên điện thoại (<= 768px), luôn khóa giao diện Duo khi gập theo yêu cầu
+      if (window.innerWidth <= 768) {
+        mode = 'folded';
+      }
       currentDuoMode = mode;
       const workspace = document.getElementById('app-workspace');
       const weatherNode = document.getElementById('weather-widget-node');
@@ -4018,6 +4616,16 @@ function doPost(e) {
     }
 
     function toggleDuoFoldMode() {
+      if (window.innerWidth <= 768) {
+        // Trên điện thoại, luôn giữ chế độ gập, chuyển đổi nhanh giữa AR và Danh mục
+        const colCenter = document.getElementById('col-center-panel');
+        if (colCenter && !colCenter.classList.contains('mobile-hidden')) {
+          switchMobileTab('grid');
+        } else {
+          switchMobileTab('device');
+        }
+        return;
+      }
       if (currentDuoMode === 'unfolded') {
         setDuoMode('folded');
       } else {
@@ -4045,12 +4653,21 @@ function doPost(e) {
         const deltaY = touchEndY - touchStartY;
 
         if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.1) {
-          if (deltaX < 0) {
-            // Gạt trái -> Gập lại Cover
-            setDuoMode('folded');
+          if (window.innerWidth <= 768) {
+            // Trên điện thoại: Gạt trái chuyển sang Danh Mục Kính, Gạt phải về Gương AR
+            if (deltaX < 0) {
+              switchMobileTab('grid');
+            } else {
+              switchMobileTab('device');
+            }
           } else {
-            // Gạt phải -> Mở ngang Dual-Screen
-            setDuoMode('unfolded');
+            if (deltaX < 0) {
+              // Gạt trái -> Gập lại Cover
+              setDuoMode('folded');
+            } else {
+              // Gạt phải -> Mở ngang Dual-Screen
+              setDuoMode('unfolded');
+            }
           }
         }
       }, { passive: true });
@@ -4069,33 +4686,55 @@ function doPost(e) {
         isMouseDown = false;
         const deltaX = e.clientX - mouseStartX;
         if (Math.abs(deltaX) > 65) {
-          if (deltaX < 0) {
-            setDuoMode('folded');
+          if (window.innerWidth <= 768) {
+            if (deltaX < 0) {
+              switchMobileTab('grid');
+            } else {
+              switchMobileTab('device');
+            }
           } else {
-            setDuoMode('unfolded');
+            if (deltaX < 0) {
+              setDuoMode('folded');
+            } else {
+              setDuoMode('unfolded');
+            }
           }
         }
       });
     }
 
-    // Mobile screen switcher (chuyển đổi tab trên điện thoại)
-    // Mobile screen switcher (chuyển đổi tab trên điện thoại <= 680px)
+    // Mobile screen switcher (chuyển đổi tab trên điện thoại <= 768px: Gương AR / Danh mục / Thời tiết)
     function switchMobileTab(tab) {
       const colCenter = document.getElementById('col-center-panel');
       const colRight = document.getElementById('col-right-panel');
+      const colLeft = document.getElementById('col-left-panel');
       const btnDev = document.getElementById('btn-tab-device');
       const btnGrid = document.getElementById('btn-tab-grid');
+      const btnWeather = document.getElementById('btn-tab-weather');
+
+      // Ẩn tất cả các cột trên mobile
+      if (colCenter) colCenter.classList.add('mobile-hidden');
+      if (colRight) colRight.classList.add('mobile-hidden');
+      if (colLeft) colLeft.classList.add('mobile-hidden');
+
+      if (btnDev) btnDev.classList.remove('active');
+      if (btnGrid) btnGrid.classList.remove('active');
+      if (btnWeather) btnWeather.classList.remove('active');
 
       if (tab === 'device') {
         if (colCenter) colCenter.classList.remove('mobile-hidden');
-        if (colRight) colRight.classList.add('mobile-hidden');
         if (btnDev) btnDev.classList.add('active');
-        if (btnGrid) btnGrid.classList.remove('active');
+        // Kích hoạt cập nhật khung canvas AR
+        setTimeout(() => {
+          updateCanvasDimensions();
+          resetCenterStage();
+        }, 50);
+      } else if (tab === 'weather') {
+        if (colLeft) colLeft.classList.remove('mobile-hidden');
+        if (btnWeather) btnWeather.classList.add('active');
       } else {
-        if (colCenter) colCenter.classList.add('mobile-hidden');
         if (colRight) colRight.classList.remove('mobile-hidden');
         if (btnGrid) btnGrid.classList.add('active');
-        if (btnDev) btnDev.classList.remove('active');
       }
     }
 
@@ -5356,11 +5995,23 @@ function doPost(e) {
       renderAppGrid();
       selectGlass(0);
       initSwipeGestures();
-      setDuoMode('unfolded'); // Ban đầu mở ngang Duo 2 màn hình chuẩn tỉ lệ
+
+      // Kiểm tra thiết bị truy cập: Trên điện thoại (<= 768px), chỉ mở giao diện Duo khi gập
+      const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if (isMobile) {
+        setDuoMode('folded');
+        switchMobileTab('device');
+      } else {
+        setDuoMode('unfolded'); // Ban đầu trên Desktop mở ngang Duo 2 màn hình chuẩn tỉ lệ
+      }
+
       syncGoogleSheets(false);
       toggleScreenMode('music');
 
       window.addEventListener('resize', () => {
+        if (window.innerWidth <= 768 && currentDuoMode !== 'folded') {
+          setDuoMode('folded');
+        }
         updateCanvasDimensions();
         resetCenterStage();
       });
