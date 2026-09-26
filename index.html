@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>SR89 Optic • iPhone Duo Starlight & Glacier Ice Studio</title>
   <meta name="description" content="Trải nghiệm thử kính AR thực tế ảo trên giao diện màn hình gập iPhone Duo màu Trắng Ánh Sao và Xanh Băng Thanh kết hợp trình phát nhạc Liquid Music và bộ lọc kính.">
-  <meta name="theme-color" content="#0284C7">
+  <meta name="theme-color" content="#0EA5E9">
 
   <!-- Open Graph Meta -->
   <meta property="og:type" content="website">
@@ -14,10 +14,10 @@
   <meta property="og:description" content="Trải nghiệm thử kính AR trên màn hình gập iPhone Duo màu Trắng Ánh Sao và Xanh Băng Thanh sang trọng thanh lịch.">
   <meta property="og:image" content="images/Puma1.png">
 
-  <!-- Google Fonts: Be Vietnam Pro (Chuẩn phông chữ tiếng Việt sắc nét, đều nét) + Plus Jakarta Sans -->
+  <!-- Google Fonts: SF Pro-like stack — Inter + Plus Jakarta Sans + Be Vietnam Pro (tiếng Việt sắc nét) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- MediaPipe & PapaParse (Zero Build CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
@@ -25,49 +25,44 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
   <style>
-/* ==========================================================================
-   1. STARLIGHT WHITE & GLACIER ICE BLUE DESIGN TOKENS (IPHONE DUO STUDIO)
-   ========================================================================== */
-:root {
-  /* HSL/RGB Base for Dynamic Opacity */
-  --ice-primary-rgb: 14, 165, 233; /* #0EA5E9 */
+    /* ==========================================================================
+       1. STARLIGHT WHITE & GLACIER ICE BLUE DESIGN TOKENS (IPHONE DUO STUDIO)
+       ========================================================================== */
+    :root {
+      /* Starlight White (Trắng Ánh Sao Ceramic — iPhone / iPad) */
+      --starlight-pure: #FFFFFF;
+      --starlight-surface: #F8FAFC;
+      --starlight-pearl: #F1F5F9;
+      --starlight-mist: #E8F4FC;
+      --starlight-border: rgba(255, 255, 255, 0.82);
+      --starlight-titanium: #C5D0DC;
+      --starlight-silver: #E2E8F0;
 
-  /* Starlight White (Trắng Ánh Sao Ceramic) */
-  --starlight-pure: #FFFFFF;
-  --starlight-surface: #F8FAFC;
-  --starlight-pearl: #F1F5F9;
-  --starlight-border: rgba(226, 232, 240, 0.9);
-  --starlight-titanium: #CBD5E1;
+      /* Glacier Ice Blue (Xanh Băng Thanh) */
+      --ice-primary: #0EA5E9;
+      --ice-deep: #0284C7;
+      --ice-cyan: #38BDF8;
+      --ice-frost: #7DD3FC;
+      --ice-glow: #BAE6FD;
+      --ice-mist: #E0F2FE;
+      --ice-tint: rgba(14, 165, 233, 0.10);
+      --ice-border: rgba(56, 189, 248, 0.42);
+      --apple-green: #34C759;
+      --apple-blue: #007AFF;
 
-  /* Glacier Ice Blue (Xanh Băng Thanh Tươi Sáng Luminous) */
-  --ice-primary: rgb(var(--ice-primary-rgb));
-  --ice-cyan: #38BDF8;
-  --ice-frost: #7DD3FC;
-  --ice-glow: #BAE6FD;
-  --ice-mist: #E0F2FE;
-  --ice-tint: rgba(var(--ice-primary-rgb), 0.08); /* Tự động đồng bộ với primary */
-  --ice-border: rgba(56, 189, 248, 0.35);
-  --apple-green: #34C759;
+      /* Liquid Frost Glass — Starlight translucency (clearer on light) */
+      --liquid-glass-bg: rgba(255, 255, 255, 0.55);
+      --liquid-glass-border: rgba(255, 255, 255, 0.85);
+      --liquid-glass-blur: blur(40px) saturate(180%);
+      --liquid-glass-shadow: 0 20px 50px rgba(15, 23, 42, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.95);
 
-  /* High-contrast Text (iPhone Duo Obsidian & Slate) */
-  --text-obsidian: #0F172A;
-  --text-slate: #334155;
-  --text-muted: #64748B;
+      /* Typography — SF Pro–like hierarchy */
+      --font-main: 'Inter', 'Plus Jakarta Sans', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Plus Jakarta Sans', 'Inter', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Liquid Frost Glass */
-  --liquid-glass-bg: rgba(255, 255, 255, 0.88);
-  --liquid-glass-border: var(--starlight-border); /* Kế thừa để giảm trùng lặp */
-  --liquid-glass-blur: blur(35px) saturate(190%);
-  --liquid-glass-shadow: 0 14px 40px rgba(15, 23, 42, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.95);
-
-  /* Typography (Đẩy font hệ thống Apple lên ưu tiên cao hơn) */
-  --font-main: -apple-system, BlinkMacSystemFont, 'Be Vietnam Pro', 'Plus Jakarta Sans', 'Inter', "Segoe UI", Roboto, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, 'Be Vietnam Pro', 'Plus Jakarta Sans', sans-serif;
-
-  /* Hardware Specifications */
-  --duo-hinge-width: 14px;
-  --duo-border-radius: 40px;
-}
+      --duo-hinge-width: 14px;
+      --duo-border-radius: 40px;
+    }
 
     * {
       box-sizing: border-box;
@@ -83,6 +78,7 @@
       font-family: var(--font-main) !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      letter-spacing: -0.01em;
     }
 
     html, body {
@@ -91,49 +87,54 @@
       min-height: 100dvh;
       overflow: hidden;
       font-family: var(--font-main);
-      color: #0F172A;
+      color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
 
-    /* Serene Starlight White & Glacier Ice Wallpaper */
+    /* iPhone wallpaper — tươi sáng (pastel mesh) */
     body {
       display: flex;
       flex-direction: column;
-      background: 
-        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.14) 0%, transparent 45%),
-        radial-gradient(circle at 88% 12%, rgba(224, 242, 254, 0.65) 0%, transparent 45%),
-        radial-gradient(circle at 50% 88%, rgba(186, 230, 253, 0.35) 0%, transparent 50%),
-        radial-gradient(circle at 82% 82%, rgba(125, 211, 252, 0.18) 0%, transparent 45%),
-        linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 45%, #E2E8F0 100%);
+      background:
+        radial-gradient(ellipse 90% 70% at 8% 12%, rgba(255, 255, 255, 1) 0%, transparent 55%),
+        radial-gradient(ellipse 75% 60% at 92% 8%, rgba(186, 230, 253, 0.85) 0%, transparent 50%),
+        radial-gradient(ellipse 80% 55% at 70% 90%, rgba(196, 181, 253, 0.45) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 45% at 25% 75%, rgba(125, 211, 252, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 40% at 55% 40%, rgba(251, 207, 232, 0.3) 0%, transparent 45%),
+        linear-gradient(165deg, #F0F9FF 0%, #E0F2FE 28%, #F5F3FF 58%, #FDF4FF 100%);
       perspective: 1600px;
       position: relative;
+      color: #0F172A;
     }
 
-    /* Ambient animated orbs - Glacier Ice Blue & Starlight */
+    /* Ambient orbs — sáng hơn */
     .ambient-orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(90px);
+      filter: blur(110px);
       pointer-events: none;
       z-index: 1;
-      opacity: 0.45;
-      animation: floatOrb 14s infinite alternate ease-in-out;
+      opacity: 0.75;
+      animation: floatOrb 16s infinite alternate ease-in-out;
     }
     .orb-1 {
-      width: 500px; height: 500px;
-      background: rgba(56, 189, 248, 0.12);
-      top: -100px; left: -100px;
+      width: 540px; height: 540px;
+      background: rgba(255, 255, 255, 0.95);
+      top: -140px; left: -80px;
     }
     .orb-2 {
-      width: 450px; height: 450px;
-      background: rgba(14, 165, 233, 0.08);
-      bottom: -80px; right: -80px;
-      animation-duration: 18s;
+      width: 480px; height: 480px;
+      background: rgba(125, 211, 252, 0.55);
+      bottom: -100px; right: -80px;
+      animation-duration: 20s;
     }
     .orb-3 {
-      width: 350px; height: 350px;
-      background: rgba(186, 230, 253, 0.2);
+      width: 380px; height: 380px;
+      background: rgba(216, 180, 254, 0.4);
       top: 40%; left: 45%;
-      animation-duration: 20s;
+      animation-duration: 22s;
     }
 
     @keyframes floatOrb {
@@ -147,107 +148,108 @@
     .top-system-nav {
       position: relative;
       z-index: 100;
-      height: 40px;
-      padding: 0 20px;
-      display: flex;
+      height: 48px;
+      padding: 0 18px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border-bottom: 1.5px solid rgba(226, 232, 240, 0.9);
-      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+      background: rgba(255, 255, 255, 0.62);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
       flex-shrink: 0;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
     }
 
     .nav-brand-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
+      justify-self: start;
+    }
+    .nav-brand-mark {
+      font-size: 15px;
+      line-height: 1;
     }
     .nav-brand-title {
       font-family: var(--font-display);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
-      color: #0F172A;
-      letter-spacing: -0.3px;
+      background: linear-gradient(105deg, #0F172A 0%, #0369A1 55%, #0EA5E9 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.4px;
+      line-height: 1.15;
     }
 
-    .nav-badge-pill {
-      background: #E0F2FE;
-      border: 1px solid #7DD3FC;
-      color: #0369A1;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
+    .nav-center-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      justify-self: center;
     }
 
     .nav-right-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
+      justify-self: end;
     }
 
-    /* Switcher pill: Mở Ngang Duo / Gập Lại Cover */
+    .nav-weather-pill {
+      font-size: 12px;
+      font-weight: 700;
+      color: #B45309;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      background: rgba(251, 191, 36, 0.12);
+    }
+
+    /* Switcher pill: Mở / Gập — compact center */
     .duo-mode-segmented-pill {
       display: flex;
-      background: #F1F5F9;
-      border: 1.5px solid #CBD5E1;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
       border-radius: 20px;
-      padding: 2px;
+      padding: 3px;
       gap: 2px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
     }
     .duo-mode-segmented-pill .seg-btn {
       background: transparent;
       border: none;
-      color: #475569;
-      padding: 4px 12px;
+      color: #64748B;
+      padding: 6px 16px;
       border-radius: 16px;
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 650;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
-      transition: all 0.25s ease;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       font-family: var(--font-main);
+      letter-spacing: -0.01em;
     }
     .duo-mode-segmented-pill .seg-btn:hover {
       color: #0F172A;
     }
     .duo-mode-segmented-pill .seg-btn.active {
-      background: #FFFFFF;
-      color: #0284C7;
-      font-weight: 800;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
-    }
-
-    .duo-gesture-hint-pill {
-      background: #E0F2FE;
-      border: 1px solid #7DD3FC;
-      padding: 3px 10px;
-      border-radius: 14px;
-      font-size: 10.5px;
+      background: linear-gradient(105deg, #0EA5E9 0%, #38BDF8 100%);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(14, 165, 233, 0.35);
       font-weight: 700;
-      color: #0369A1;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-    .duo-gesture-hint-pill:hover {
-      background: #BAE6FD;
-      transform: scale(1.02);
     }
 
     .nav-btn-link {
-      background: #F8FAFC;
-      border: 1.5px solid #CBD5E1;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
       color: #0F172A;
-      padding: 4px 12px;
+      padding: 5px 11px;
       border-radius: 14px;
       font-size: 12px;
       font-weight: 700;
@@ -256,12 +258,21 @@
       align-items: center;
       gap: 5px;
       transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
     }
     .nav-btn-link:hover {
-      background: #FFFFFF;
+      background: #fff;
       border-color: #0EA5E9;
-      color: #0284C7;
       transform: translateY(-1px);
+    }
+    .nav-btn-orders {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: #10B981;
+      color: #047857;
+    }
+    .nav-btn-orders:hover {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: #059669;
     }
 
     /* ==========================================================================
@@ -305,28 +316,29 @@
       margin: 0 auto;
     }
 
-    /* Khung máy iPhone Duo mở ngang - CÂN ĐỐI TRÊN MỌI MÀN HÌNH 16:9, 16:10, 21:9 (LIQUID GLASS TAHOE THỜI THƯỢNG) */
+    /* Khung máy iPhone Duo mở ngang — Starlight Liquid Glass */
     .app-workspace.mode-unfolded .foldable-duo-device {
       width: min(1380px, 96vw);
-      height: calc(100vh - 138px); /* Cân đối hoàn hảo, không bị đè lên thanh dock dưới cùng */
+      height: calc(100vh - 138px);
       max-height: 800px;
       aspect-ratio: auto;
-      background: rgba(255, 255, 255, 0.90);
-      backdrop-filter: blur(40px) saturate(180%);
-      -webkit-backdrop-filter: blur(40px) saturate(180%);
-      border-radius: 34px;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(48px) saturate(200%);
+      -webkit-backdrop-filter: blur(48px) saturate(200%);
+      border-radius: 36px;
+      clip-path: inset(0 round 36px);
+      -webkit-clip-path: inset(0 round 36px);
       padding: 10px;
-      border: 2px solid rgba(255, 255, 255, 1);
-      box-shadow: 
-        0 25px 70px rgba(15, 23, 42, 0.12),
-        0 0 45px rgba(56, 189, 248, 0.18),
-        inset 0 1px 3px #FFFFFF;
+      border: none;
+      box-shadow: none;
+      filter: drop-shadow(0 20px 50px rgba(15, 23, 42, 0.12));
       display: flex;
       flex-direction: row;
       align-items: stretch;
       gap: 8px;
       position: relative;
       overflow: hidden;
+      isolation: isolate;
       margin: 0 auto;
       transform-style: preserve-3d;
       transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1),
@@ -337,7 +349,7 @@
                   box-shadow 0.65s ease;
     }
 
-    /* NỬA TRÁI (LEFT SCREEN): THON GỌN THEO CHIỀU NGANG (~42%), CHUẨN TỈ LỆ IPHONE DUO */
+    /* NỬA TRÁI — clip góc cứng */
     .app-workspace.mode-unfolded .duo-left-half {
       flex: 0 0 42%;
       max-width: 460px;
@@ -345,7 +357,11 @@
       height: 100%;
       position: relative;
       border-radius: 24px 8px 8px 24px;
+      clip-path: inset(0 round 24px 8px 8px 24px);
+      -webkit-clip-path: inset(0 round 24px 8px 8px 24px);
       overflow: hidden;
+      isolation: isolate;
+      background: transparent;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -353,7 +369,7 @@
       transition: border-radius 0.65s ease, width 0.65s ease;
     }
 
-    /* 1/4 KHUNG TRÁI TRÊN: WIDGET THỜI TIẾT VÀ ĐỒNG HỒ THỜI GIAN THỰC */
+    /* Slot thời tiết — clip + liquid glass trong suốt */
     .app-workspace.mode-unfolded .duo-internal-weather-slot {
       flex: 0 0 24%;
       min-height: 135px;
@@ -362,23 +378,40 @@
       z-index: 48;
       pointer-events: auto;
       display: block;
+      overflow: hidden;
+      border-radius: 20px;
+      clip-path: inset(0 round 20px);
+      -webkit-clip-path: inset(0 round 20px);
+      isolation: isolate;
+      background: transparent;
     }
     .app-workspace.mode-unfolded .duo-internal-weather-slot .liquid-weather-widget {
       height: 100%;
+      width: 100%;
       box-sizing: border-box;
       padding: 10px 14px;
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(35px) saturate(180%);
-      -webkit-backdrop-filter: blur(35px) saturate(180%);
-      border: 1.5px solid #E2E8F0;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      clip-path: inset(0 round 20px);
+      -webkit-clip-path: inset(0 round 20px);
+      overflow: hidden;
+      isolation: isolate;
+      background: linear-gradient(
+        145deg,
+        rgba(186, 230, 253, 0.32) 0%,
+        rgba(255, 255, 255, 0.12) 50%,
+        rgba(56, 189, 248, 0.2) 100%
+      ) !important;
+      backdrop-filter: blur(40px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+      border: none !important;
+      box-shadow: none !important;
+      filter: drop-shadow(0 6px 16px rgba(2, 132, 199, 0.12));
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
-    /* 3/4 KHUNG TRÁI DƯỚI: KHUNG THỬ KÍNH AR / ALBUM NHẠC CHUẨN TỈ LỆ DUO (LIQUID GLASS BORDER) */
+    /* Viewport AR/Nhạc — clip góc cứng, không viền vuông */
     .app-workspace.mode-unfolded .duo-left-half .foldable-screen-viewport {
       flex: 1;
       min-height: 0;
@@ -387,11 +420,17 @@
       width: 100%;
       height: auto;
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.92);
-      border: 2px solid rgba(226, 232, 240, 0.9);
-      backdrop-filter: blur(35px) saturate(180%);
-      -webkit-backdrop-filter: blur(35px) saturate(180%);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+      overflow: hidden;
+      isolation: isolate;
+      clip-path: inset(0 round 20px);
+      -webkit-clip-path: inset(0 round 20px);
+      background: rgba(8, 16, 28, 0.55);
+      border: none;
+      outline: none;
+      box-shadow: none;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.18));
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
     }
 
     /* Vị trí thanh điều khiển AR trong chế độ mở ngang */
@@ -413,8 +452,8 @@
       bottom: 0;
       left: auto;
       border-radius: 4px;
-      background: linear-gradient(90deg, #CBD5E1 0%, #E2E8F0 45%, #F1F5F9 55%, #CBD5E1 100%);
-      box-shadow: inset 1px 0 2px rgba(255, 255, 255, 0.8), inset -1px 0 2px rgba(148, 163, 184, 0.5);
+      background: linear-gradient(90deg, #181920 0%, #3e4150 45%, #2a2c38 55%, #101116 100%);
+      box-shadow: inset 1px 0 2px rgba(255, 255, 255, 0.5), inset -1px 0 2px rgba(0, 0, 0, 0.85);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -426,44 +465,51 @@
       transition: all 0.3s ease;
     }
     .app-workspace.mode-unfolded .foldable-hinge-spine:hover {
-      background: linear-gradient(90deg, #E2E8F0 0%, #FFFFFF 45%, #FFFFFF 55%, #CBD5E1 100%);
+      background: linear-gradient(90deg, #242632 0%, #525666 45%, #383a48 55%, #161720 100%);
     }
     .hinge-gear-knob {
       width: 8px;
       height: 12px;
-      background: #94A3B8;
+      background: #5d6175;
       border-radius: 2px;
       box-shadow: inset 0 1px 1px #fff;
     }
     .hinge-toggle-badge {
       font-size: 10px;
       color: #fff;
-      background: #0EA5E9;
+      background: #0284C7;
       border-radius: 50%;
       width: 16px;
       height: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 6px rgba(14, 165, 233, 0.4);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
 
-    /* NỬA PHẢI (RIGHT SCREEN): HIỆU ỨNG GẬP 3D MƯỢT MÀ NHƯ THỰC TẾ */
+    /* NỬA PHẢI — wallpaper iPhone sáng (pastel mesh) */
     .app-workspace.mode-unfolded .duo-right-half {
       flex: 1;
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       height: 100%;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
+      position: relative;
+      background:
+        radial-gradient(ellipse 75% 55% at 12% 18%, rgba(125, 211, 252, 0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 65% 50% at 90% 10%, rgba(196, 181, 253, 0.5) 0%, transparent 50%),
+        radial-gradient(ellipse 80% 55% at 65% 88%, rgba(56, 189, 248, 0.4) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 28% 72%, rgba(251, 113, 133, 0.2) 0%, transparent 50%),
+        linear-gradient(165deg, #1E3A5F 0%, #1E293B 30%, #0F2744 65%, #0C1A30 100%);
       border-radius: 8px 24px 24px 8px;
+      clip-path: inset(0 round 8px 24px 24px 8px);
+      -webkit-clip-path: inset(0 round 8px 24px 24px 8px);
       padding: 12px 14px;
-      border: 1.5px solid rgba(226, 232, 240, 0.9);
-      box-shadow: inset 0 1px 2px #FFFFFF, 0 4px 20px rgba(15, 23, 42, 0.04);
+      border: none;
+      box-shadow: none;
       overflow: hidden;
+      isolation: isolate;
       transform-origin: left center;
       transform-style: preserve-3d;
       transform: rotateY(0deg) scale(1);
@@ -474,16 +520,37 @@
                   opacity 0.45s ease,
                   visibility 0.65s ease;
     }
+    .app-workspace.mode-unfolded .duo-right-half::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 75% 60%, rgba(125, 211, 252, 0.12) 0%, transparent 35%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .app-workspace.mode-unfolded .duo-right-half > * {
+      position: relative;
+      z-index: 1;
+    }
 
     .app-workspace.mode-unfolded .duo-internal-cat-slot {
       display: block;
       flex-shrink: 0;
     }
     .app-workspace.mode-unfolded .duo-internal-cat-slot .quick-category-box {
-      padding: 8px 10px;
-      border-radius: 14px;
-      background: #F8FAFC;
-      border: 1.5px solid #E2E8F0;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(36px) saturate(180%);
+      -webkit-backdrop-filter: blur(36px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    }
+    .app-workspace.mode-unfolded .duo-internal-cat-slot .cat-box-heading {
+      color: rgba(255, 255, 255, 0.65);
     }
     .app-workspace.mode-unfolded .duo-internal-cat-slot .cat-btn-group {
       flex-direction: row;
@@ -493,8 +560,19 @@
     .app-workspace.mode-unfolded .duo-internal-cat-slot .cat-toggle-btn {
       flex: 1;
       min-width: 110px;
-      padding: 6px 10px;
+      padding: 7px 10px;
       font-size: 11px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #fff;
+    }
+    .app-workspace.mode-unfolded .duo-internal-cat-slot .cat-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+    .app-workspace.mode-unfolded .duo-internal-cat-slot .cat-toggle-btn.active {
+      background: linear-gradient(105deg, #0EA5E9 0%, #38BDF8 100%);
+      border-color: rgba(255, 255, 255, 0.5);
+      color: #fff;
     }
 
     .app-workspace.mode-unfolded .duo-internal-grid-slot {
@@ -509,13 +587,51 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      isolation: isolate;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(36px) saturate(180%);
+      -webkit-backdrop-filter: blur(36px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 20px;
+      padding: 12px 12px 8px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    }
+    .app-workspace.mode-unfolded .duo-internal-grid-slot .grid-brand-title {
+      color: #fff;
+    }
+    .app-workspace.mode-unfolded .duo-internal-grid-slot .grid-count-tag {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #E0F2FE;
+    }
+    .app-workspace.mode-unfolded .duo-internal-grid-slot .grid-search-input-wrap {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+    .app-workspace.mode-unfolded .duo-internal-grid-slot .grid-search-input-wrap input {
+      color: #fff;
+    }
+    .app-workspace.mode-unfolded .duo-internal-grid-slot .grid-search-input-wrap input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .app-workspace.mode-unfolded .duo-internal-grid-slot .app-icon-title {
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    .app-workspace.mode-unfolded .duo-internal-grid-slot .app-icon-price {
+      color: #7DD3FC;
+    }
+    .app-workspace.mode-unfolded .duo-internal-grid-slot .app-specs-pill-badge {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.22);
+      color: #BAE6FD;
     }
     .app-workspace.mode-unfolded .squircle-app-grid {
       flex: 1;
       min-height: 0;
       overflow-y: auto;
       padding-right: 4px;
-      grid-template-columns: repeat(5, 1fr) !important; /* ĐÚNG CHUẨN 5 KÍNH 1 HÀNG */
+      grid-template-columns: repeat(5, 1fr) !important;
       gap: 12px 6px;
     }
 
@@ -565,19 +681,20 @@
       height: min(490px, calc(100vh - 146px));
       aspect-ratio: 354 / 485;
       max-height: calc(100vh - 146px);
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(40px) saturate(210%);
-      -webkit-backdrop-filter: blur(40px) saturate(210%);
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(48px) saturate(200%);
+      -webkit-backdrop-filter: blur(48px) saturate(200%);
       border-radius: 12px var(--duo-border-radius) var(--duo-border-radius) 12px;
-      padding: 7px 7px 7px 18px; /* Left padding for spine */
-      box-shadow: 
-        0 25px 70px rgba(0, 0, 0, 0.55),
-        0 8px 24px rgba(56, 189, 248, 0.20),
-        inset 0 1px 2px rgba(255, 255, 255, 0.7);
-      border: 2px solid rgba(255, 255, 255, 0.45);
+      clip-path: inset(0 round 12px 40px 40px 12px);
+      -webkit-clip-path: inset(0 round 12px 40px 40px 12px);
+      padding: 7px 7px 7px 18px;
+      box-shadow: none;
+      filter: drop-shadow(0 18px 40px rgba(15, 23, 42, 0.12));
+      border: none;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      isolation: isolate;
       transform-style: preserve-3d;
       transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1),
                   max-width 0.65s cubic-bezier(0.22, 1, 0.36, 1),
@@ -590,6 +707,9 @@
     .app-workspace.mode-folded .duo-left-half {
       width: 100%;
       height: 100%;
+      overflow: hidden;
+      isolation: isolate;
+      background: transparent;
       position: relative;
       border-radius: 8px 22px 22px 8px;
       overflow: hidden;
@@ -601,6 +721,13 @@
       width: 100%;
       height: 100%;
       border-radius: 8px 22px 22px 8px;
+      overflow: hidden;
+      isolation: isolate;
+      clip-path: inset(0 round 8px 22px 22px 8px);
+      -webkit-clip-path: inset(0 round 8px 22px 22px 8px);
+      background: rgba(8, 16, 28, 0.55);
+      border: none;
+      box-shadow: none;
     }
 
     .app-workspace.mode-folded .duo-internal-weather-slot {
@@ -644,46 +771,125 @@
       padding-top: 12px;
     }
 
-    /* Cột 3: Lưới tất cả kính MỞ RỘNG TRÀN TOÀN BỘ PHẦN KHÔNG GIAN CÒN LẠI */
+    /* Cột 3 khi gập — cùng wallpaper iPhone sáng như khi mở */
     .app-workspace.mode-folded .col-right-panel {
-      flex: 1; /* Chiếm trọn không gian còn lại của màn hình */
+      flex: 1;
       min-width: 0;
-      max-width: none !important; /* XÓA BỎ GIỚI HẠN 520px */
+      max-width: none !important;
       display: flex;
       flex-direction: column;
       max-height: calc(100vh - 145px);
-      overflow-y: auto;
+      overflow: hidden;
+      border-radius: 24px;
+      clip-path: inset(0 round 24px);
+      -webkit-clip-path: inset(0 round 24px);
+      /* Wallpaper giống nửa phải khi mở */
+      background:
+        radial-gradient(ellipse 75% 55% at 12% 18%, rgba(125, 211, 252, 0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 65% 50% at 90% 10%, rgba(196, 181, 253, 0.5) 0%, transparent 50%),
+        radial-gradient(ellipse 80% 55% at 65% 88%, rgba(56, 189, 248, 0.4) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 28% 72%, rgba(251, 113, 133, 0.2) 0%, transparent 50%),
+        linear-gradient(165deg, #1E3A5F 0%, #1E293B 30%, #0F2744 65%, #0C1A30 100%);
+      position: relative;
+    }
+    .app-workspace.mode-folded .col-right-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 75% 60%, rgba(125, 211, 252, 0.12) 0%, transparent 35%);
+      pointer-events: none;
+      z-index: 0;
     }
     .app-workspace.mode-folded .col-right-panel .grid-panel-container {
+      position: relative;
+      z-index: 1;
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
-      background: var(--liquid-glass-bg);
-      backdrop-filter: var(--liquid-glass-blur);
-      -webkit-backdrop-filter: var(--liquid-glass-blur);
-      border: 1px solid var(--liquid-glass-border);
-      border-radius: 24px;
-      padding: 16px 18px;
-      box-shadow: var(--liquid-glass-shadow);
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(36px) saturate(180%);
+      -webkit-backdrop-filter: blur(36px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 20px;
+      margin: 10px;
+      padding: 14px 14px 8px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .app-workspace.mode-folded .col-right-panel .grid-brand-title {
+      color: #fff;
+    }
+    .app-workspace.mode-folded .col-right-panel .grid-count-tag {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #E0F2FE;
+    }
+    .app-workspace.mode-folded .col-right-panel .grid-search-input-wrap {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+    .app-workspace.mode-folded .col-right-panel .grid-search-input-wrap input {
+      color: #fff;
+    }
+    .app-workspace.mode-folded .col-right-panel .grid-search-input-wrap input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .app-workspace.mode-folded .col-right-panel .app-icon-title {
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+    }
+    .app-workspace.mode-folded .col-right-panel .app-icon-price {
+      color: #7DD3FC;
+    }
+    .app-workspace.mode-folded .col-right-panel .app-specs-pill-badge {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.22);
+      color: #BAE6FD;
     }
     .app-workspace.mode-folded .col-right-panel .squircle-app-grid {
-      grid-template-columns: repeat(5, 1fr) !important; /* ĐÚNG CHUẨN 5 KÍNH 1 HÀNG */
+      grid-template-columns: repeat(5, 1fr) !important;
       gap: 14px 8px;
       padding-bottom: 24px;
+      overflow-y: auto;
+      min-height: 0;
+      flex: 1;
     }
 
-    /* Weather card base */
+    /* Weather card — Liquid Glass, clip cứng */
     .liquid-weather-widget {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.18) 0%, rgba(56, 189, 248, 0.14) 100%);
-      backdrop-filter: var(--liquid-glass-blur);
-      -webkit-backdrop-filter: var(--liquid-glass-blur);
-      border: 1px solid var(--liquid-glass-border);
-      border-radius: 24px;
-      padding: 16px;
-      box-shadow: var(--liquid-glass-shadow);
+      background: linear-gradient(
+        145deg,
+        rgba(186, 230, 253, 0.35) 0%,
+        rgba(255, 255, 255, 0.15) 48%,
+        rgba(56, 189, 248, 0.22) 100%
+      );
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border: none;
+      border-radius: 22px;
+      clip-path: inset(0 round 22px);
+      -webkit-clip-path: inset(0 round 22px);
+      padding: 14px 16px;
+      box-shadow: none;
+      filter: drop-shadow(0 8px 20px rgba(2, 132, 199, 0.12));
       position: relative;
       overflow: hidden;
+      isolation: isolate;
+    }
+    .liquid-weather-widget::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -15%;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(125, 211, 252, 0.35) 0%, transparent 70%);
+      pointer-events: none;
     }
 
     .weather-top {
@@ -699,6 +905,7 @@
     .weather-desc {
       font-size: 11.5px;
       color: #475569;
+      font-weight: 600;
     }
 
     .weather-temp-hero {
@@ -708,10 +915,11 @@
       margin: 6px 0 8px;
     }
     .temp-degrees {
-      font-size: 42px;
-      font-weight: 700;
+      font-size: 44px;
+      font-weight: 300;
       font-family: var(--font-display);
       line-height: 1;
+      letter-spacing: -0.04em;
       color: #0F172A;
     }
     .weather-emoji {
@@ -727,8 +935,8 @@
       display: flex;
       gap: 10px;
       font-size: 11px;
-      color: #64748B;
-      font-weight: 600;
+      color: #475569;
+      font-weight: 650;
       margin-bottom: 10px;
     }
 
@@ -740,11 +948,11 @@
       margin-bottom: 4px;
     }
     .live-clock-time {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 800;
       font-family: var(--font-display);
       color: #0F172A;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.6px;
       line-height: 1;
     }
     .live-clock-date {
@@ -753,36 +961,32 @@
       color: #475569;
     }
     .weather-location-pill {
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 800;
-      color: #0369A1;
-      background: #E0F2FE;
-      border: 1px solid #BAE6FD;
-      padding: 2px 8px;
-      border-radius: 8px;
+      color: #0F172A;
     }
 
     /* Eyewear UV advice - CLICKABLE WITH FULL MODAL PREVIEW */
     .weather-eyewear-advice {
-      background: #FFFFFF;
-      border: 1.5px solid #CBD5E1;
+      background: rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(14, 165, 233, 0.25);
       border-radius: 12px;
       padding: 6px 10px;
       font-size: 10.5px;
       line-height: 1.35;
-      color: #334155;
       cursor: pointer;
       transition: all 0.2s ease;
       position: relative;
+      color: #334155;
+      font-weight: 600;
     }
     .weather-eyewear-advice:hover {
-      background: #E0F2FE;
-      border-color: #38BDF8;
-      color: #0284C7;
+      background: rgba(14, 165, 233, 0.1);
+      border-color: #0EA5E9;
       transform: translateY(-1px);
     }
     .weather-eyewear-advice strong {
-      color: #D97706;
+      color: #B45309;
       display: inline;
       margin-right: 4px;
     }
@@ -821,26 +1025,24 @@
       align-items: center;
       justify-content: space-between;
       padding: 8px 12px;
-      background: #FFFFFF;
-      border: 1.5px solid #E2E8F0;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.3);
       border-radius: 12px;
-      color: #334155;
+      color: #0F172A;
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
     }
     .cat-toggle-btn:hover {
-      background: #F1F5F9;
-      border-color: #CBD5E1;
-      color: #0F172A;
+      background: #fff;
+      border-color: #0EA5E9;
       transform: translateX(3px);
     }
     .cat-toggle-btn.active {
-      background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
-      color: #FFFFFF;
-      border-color: #38BDF8;
-      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.25);
+      background: linear-gradient(105deg, #0EA5E9 0%, #38BDF8 100%);
+      border-color: rgba(255, 255, 255, 0.55);
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.42);
     }
     .cat-toggle-btn span.count {
       background: rgba(0, 0, 0, 0.35);
@@ -849,20 +1051,24 @@
       font-size: 10px;
     }
 
-    /* Screen display container inside Foldable Frame (LIQUID GLASS BORDER & FROSTED BLUR) */
+    /* Screen display container — clip góc cứng */
     .foldable-screen-viewport {
       position: relative;
       width: 100%;
       height: 100%;
       border-radius: 8px 34px 34px 8px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.08);
-      border: 2px solid rgba(255, 255, 255, 0.42);
-      backdrop-filter: blur(35px) saturate(210%);
-      -webkit-backdrop-filter: blur(35px) saturate(210%);
+      isolation: isolate;
+      clip-path: inset(0 round 8px 34px 34px 8px);
+      -webkit-clip-path: inset(0 round 8px 34px 34px 8px);
+      background: rgba(8, 16, 28, 0.5);
+      border: none;
+      outline: none;
+      box-shadow: none;
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
       display: flex;
       flex-direction: column;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.7);
     }
 
     /* Front Punch-hole Camera on Top-Right Corner */
@@ -936,16 +1142,17 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      border-radius: inherit;
       background: 
-        radial-gradient(circle at 75% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
-        radial-gradient(circle at 25% 65%, rgba(224, 242, 254, 0.6) 0%, transparent 65%),
-        linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 55%, #F1F5F9 100%);
+        radial-gradient(circle at 75% 20%, rgba(56, 189, 248, 0.20) 0%, transparent 60%),
+        radial-gradient(circle at 25% 65%, rgba(2, 132, 199, 0.18) 0%, transparent 65%),
+        linear-gradient(180deg, #0C1A30 0%, #081324 55%, #040913 100%);
       display: flex;
       flex-direction: column;
-      padding: 12px 48px 12px 14px; /* Right padding 48px rộng rãi, không bị viền chèn vào */
+      padding: 12px 48px 12px 14px;
+      overflow-x: hidden;
       overflow-y: auto;
       z-index: 20;
-      color: #0F172A;
       transition: opacity 0.35s ease, transform 0.35s ease;
     }
     .duo-music-screen::-webkit-scrollbar { display: none; }
@@ -956,35 +1163,149 @@
       transform: scale(0.96);
     }
 
-    /* Top mini status info inside music screen */
     .music-top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11px;
-      font-weight: 700;
-      color: #0F172A;
-      margin-bottom: 8px;
+      display: none;
+    }
+    .music-upload-toolbar {
+      display: none !important;
     }
 
-    /* Album Cover Art Area */
+    /* Fashion Lounge Cover — clip góc cứng, không bóng vuông */
     .music-art-hero {
       position: relative;
       width: 100%;
-      height: 140px;
-      border-radius: 16px;
+      height: 150px;
+      border-radius: 22px;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
-      margin-bottom: 12px;
+      isolation: isolate;
+      /* clip-path cắt sạch mọi vết vuông */
+      clip-path: inset(0 round 22px);
+      -webkit-clip-path: inset(0 round 22px);
+      border: none;
+      outline: none;
+      box-shadow: none;
+      /* bóng mềm theo alpha, không tạo khung vuông */
+      filter: drop-shadow(0 10px 24px rgba(14, 165, 233, 0.28));
+      margin-bottom: 14px;
       flex-shrink: 0;
-      background: #F1F5F9;
-      border: 1px solid #E2E8F0;
+      background: transparent;
+      cursor: pointer;
     }
     .music-art-hero img {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: saturate(1.2) contrast(1.05);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+      border-radius: 22px;
+    }
+    .music-art-hero.has-custom-cover img {
+      opacity: 1;
+    }
+    .cover-fallback-art {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      border-radius: 22px;
+      overflow: hidden;
+      clip-path: inset(0 round 22px);
+      -webkit-clip-path: inset(0 round 22px);
+      background:
+        radial-gradient(ellipse 80% 70% at 20% 30%, rgba(56, 189, 248, 0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 60% at 85% 20%, rgba(167, 139, 250, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse 90% 70% at 60% 90%, rgba(14, 165, 233, 0.4) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(244, 114, 182, 0.22) 0%, transparent 50%),
+        linear-gradient(155deg, #0B1628 0%, #0F2744 40%, #0C1A30 100%);
+    }
+    .cover-fallback-art::before {
+      content: '';
+      position: absolute;
+      width: 180%;
+      height: 180%;
+      top: -40%;
+      left: -40%;
+      background: conic-gradient(from 120deg, transparent 0deg, rgba(125, 211, 252, 0.12) 60deg, transparent 120deg, rgba(167, 139, 250, 0.1) 200deg, transparent 280deg);
+      animation: coverShine 12s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes coverShine {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .cover-fallback-inner {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .cover-glasses-icon {
+      width: 100px;
+      height: 42px;
+      filter: drop-shadow(0 6px 16px rgba(56, 189, 248, 0.45));
+    }
+    .cover-fallback-title,
+    .cover-fallback-badge {
+      display: none !important;
+    }
+    .music-cover-actions {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      gap: 6px;
+      z-index: 5;
+    }
+    .music-icon-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .music-icon-btn:hover {
+      transform: scale(1.1);
+      background: rgba(14, 165, 233, 0.75);
+    }
+
+    .album-header-details {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .album-title-main {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.35px;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+    .album-artist-sub {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 2px;
+      letter-spacing: -0.01em;
+    }
+    .album-format-tags {
+      display: none;
     }
 
     /* Play, Shuffle, Add controls */
@@ -999,9 +1320,9 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: #F8FAFC;
-      border: 1.5px solid #CBD5E1;
-      color: #0F172A;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1010,15 +1331,13 @@
       transition: all 0.2s ease;
     }
     .ctrl-circle-btn:hover {
-      background: #E0F2FE;
-      border-color: #38BDF8;
-      color: #0284C7;
+      background: rgba(255, 255, 255, 0.35);
       transform: scale(1.1);
     }
 
     .ctrl-play-hero-btn {
-      background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
-      color: #ffffff;
+      background: #ffffff;
+      color: #111;
       padding: 6px 20px;
       border-radius: 20px;
       font-size: 12.5px;
@@ -1028,55 +1347,53 @@
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.4);
       transition: all 0.2s ease;
     }
     .ctrl-play-hero-btn:hover {
       transform: scale(1.06);
-      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.6);
     }
 
     .album-description-text {
       font-size: 10.5px;
       line-height: 1.35;
-      color: #475569;
+      color: rgba(255, 255, 255, 0.8);
       margin-bottom: 10px;
       text-align: center;
     }
 
-    /* Interactive CTA Banner to Open AR Eyewear Mirror */
+    /* CTA — minimal AR entry */
     .cta-open-ar-banner {
+      width: 100%;
       background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
-      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 14px;
-      padding: 9px 12px;
+      padding: 10px 14px;
       margin-bottom: 12px;
       text-align: center;
       cursor: pointer;
-      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
-      animation: pulseArCta 2.5s infinite alternate ease-in-out;
-      transition: transform 0.2s ease;
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-family: inherit;
     }
     .cta-open-ar-banner:hover {
-      transform: scale(1.04);
-    }
-    @keyframes pulseArCta {
-      0% { box-shadow: 0 4px 15px rgba(14, 165, 233, 0.25); }
-      100% { box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5); }
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
     }
     .cta-open-ar-title {
-      font-size: 12px;
-      font-weight: 800;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 750;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      letter-spacing: -0.02em;
     }
     .cta-open-ar-sub {
-      font-size: 9.5px;
-      color: rgba(255, 255, 255, 0.9);
-      margin-top: 2px;
+      display: none;
     }
 
     /* Tracklist items */
@@ -1094,17 +1411,13 @@
       border-radius: 8px;
       font-size: 11.5px;
       font-weight: 600;
-      color: #0F172A;
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.06);
       cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease;
+      transition: background 0.15s ease;
     }
     .track-row:hover, .track-row.playing {
-      background: #E0F2FE;
-      border-color: #38BDF8;
-      color: #0369A1;
+      background: rgba(255, 255, 255, 0.2);
     }
     .track-left {
       display: flex;
@@ -1112,7 +1425,7 @@
       gap: 8px;
     }
     .track-num {
-      color: #64748B;
+      color: rgba(255, 255, 255, 0.5);
       font-size: 10px;
       width: 12px;
     }
@@ -1141,15 +1454,15 @@
     /* Floating bottom mini player */
     .floating-mini-player {
       margin-top: auto;
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.22);
       backdrop-filter: blur(20px);
-      border: 1.5px solid #CBD5E1;
+      border: 1px solid rgba(255, 255, 255, 0.35);
       border-radius: 14px;
       padding: 6px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
     }
     .mini-player-left {
       display: flex;
@@ -1160,26 +1473,23 @@
       width: 28px;
       height: 28px;
       border-radius: 6px;
-      background: #E0F2FE;
+      background: #0284C7;
       overflow: hidden;
-      border: 1px solid #BAE6FD;
     }
     .mini-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .mini-meta {
       font-size: 10.5px;
       line-height: 1.2;
     }
-    .mini-title { font-weight: 700; color: #0F172A; }
-    .mini-artist { font-size: 9px; color: #64748B; }
+    .mini-title { font-weight: 700; color: #fff; }
+    .mini-artist { font-size: 9px; color: rgba(255, 255, 255, 0.7); }
     .mini-controls {
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 14px;
       cursor: pointer;
-      color: #0F172A;
     }
-
 
     /* --------------------------------------------------------------------------
        STATE 2: LIVE AR EYEWEAR MIRROR (KHI BẤM THỬ KÍNH AR)
@@ -1189,6 +1499,7 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      border-radius: inherit;
       background: radial-gradient(circle at 50% 20%, rgba(56, 189, 248, 0.15) 0%, rgba(10, 16, 28, 0.92) 75%);
       display: flex;
       flex-direction: column;
@@ -1576,9 +1887,10 @@
       flex-shrink: 0;
     }
     #ar-glass-sale {
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 800;
-      color: #0284C7;
+      color: #0EA5E9;
+      letter-spacing: -0.02em;
     }
     #ar-glass-old {
       font-size: 9.5px;
@@ -1624,27 +1936,27 @@
       flex-shrink: 0;
     }
     .btn-specs-order {
-      background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%);
+      background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
       color: #fff !important;
-      padding: 5px 9px;
+      padding: 5px 10px;
       border-radius: 9px;
       font-family: var(--font-main) !important;
       font-size: 11px;
       font-weight: 700 !important;
-      letter-spacing: 0.1px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      letter-spacing: -0.01em;
+      border: 1px solid rgba(255, 255, 255, 0.45);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 3px;
-      box-shadow: 0 3px 8px rgba(2, 132, 199, 0.35);
+      box-shadow: 0 3px 10px rgba(14, 165, 233, 0.35);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
     }
     .btn-specs-order:hover {
       transform: scale(1.06);
-      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.55);
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.52);
     }
     .btn-specs-zalo {
       background: #0068FF;
@@ -1689,33 +2001,36 @@
       flex-shrink: 0;
     }
     .grid-brand-title {
-      font-size: 14.5px;
+      font-family: var(--font-display);
+      font-size: 15.5px;
       font-weight: 800;
       color: #0F172A;
       display: flex;
       align-items: center;
       gap: 8px;
+      letter-spacing: -0.35px;
     }
     .grid-count-tag {
       font-size: 10.5px;
-      font-weight: 700;
-      background: #E0F2FE;
+      font-weight: 650;
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(14, 165, 233, 0.25);
       color: #0369A1;
-      border: 1px solid #BAE6FD;
-      padding: 2px 7px;
+      padding: 2px 8px;
       border-radius: 10px;
+      letter-spacing: 0.01em;
     }
 
     .grid-search-input-wrap {
-      background: #FFFFFF;
-      border: 1.5px solid #CBD5E1;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
       border-radius: 18px;
       padding: 3px 12px;
       display: flex;
       align-items: center;
       gap: 6px;
       width: 170px;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
     }
     .grid-search-input-wrap input {
       background: none;
@@ -1724,6 +2039,7 @@
       font-size: 11.5px;
       outline: none;
       width: 100%;
+      font-weight: 600;
     }
     .grid-search-input-wrap input::placeholder {
       color: #94A3B8;
@@ -1784,10 +2100,10 @@
     }
 
     .glass-app-item.selected .app-icon-squircle {
-      border-color: #0284C7;
+      border-color: #38BDF8;
       box-shadow: 
-        0 0 0 3px #0284C7,
-        0 12px 28px rgba(2, 132, 199, 0.4),
+        0 0 0 3px #0EA5E9,
+        0 12px 28px rgba(14, 165, 233, 0.38),
         inset 0 0 0 1px #ffffff;
       transform: scale(1.05);
     }
@@ -1841,28 +2157,31 @@
     }
 
     .app-icon-title {
-      margin-top: 4px;
-      font-size: 11px;
-      font-weight: 800;
+      margin-top: 5px;
+      font-family: var(--font-display);
+      font-size: 11.5px;
+      font-weight: 750;
       color: #0F172A;
-      line-height: 1.25;
+      line-height: 1.2;
       max-width: 96px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      letter-spacing: -0.02em;
     }
     .app-icon-price {
       font-size: 11px;
       font-weight: 800;
       color: #0284C7;
       margin-top: 1px;
+      letter-spacing: -0.01em;
     }
 
     /* KHUNG THÔNG TIN KÍNH: KÍCH THƯỚC VÀ VẬT LIỆU (55-17-135, Acetate, Titanium, ...) */
     .app-specs-pill-badge {
       margin-top: 2px;
-      background: #F1F5F9;
-      border: 1px solid #CBD5E1;
+      background: rgba(14, 165, 233, 0.08);
+      border: 1px solid rgba(14, 165, 233, 0.2);
       border-radius: 8px;
       padding: 1px 5px;
       font-size: 9px;
@@ -1874,32 +2193,32 @@
       text-overflow: ellipsis;
     }
 
-    /* Nút Đặt Mua Nhanh ngay trên Card Kính - CHUẨN PHÔNG BE VIETNAM PRO ĐỀU NÉT */
+    /* Nút Đặt Mua Nhanh — Starlight Ice accent */
     .btn-card-quick-order {
       margin-top: 4px;
       background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.45);
       color: #ffffff !important;
-      padding: 3px 8px;
+      padding: 3.5px 9px;
       border-radius: 10px;
       font-family: var(--font-main) !important;
       font-size: 10px;
       font-weight: 700 !important;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.01em;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 3px;
-      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
+      box-shadow: 0 2px 10px rgba(14, 165, 233, 0.35);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
     .btn-card-quick-order:hover {
       transform: scale(1.08);
-      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
-      background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.52);
+      background: linear-gradient(135deg, #0284C7 0%, #7DD3FC 100%);
     }
 
     /* ==========================================================================
@@ -1915,16 +2234,16 @@
     }
 
     .liquid-floating-dock {
-      background: rgba(255, 255, 255, 0.90);
-      backdrop-filter: blur(40px) saturate(200%);
-      -webkit-backdrop-filter: blur(40px) saturate(200%);
-      border: 1.5px solid rgba(226, 232, 240, 0.95);
-      border-radius: 26px;
-      padding: 5px 14px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(48px) saturate(200%);
+      -webkit-backdrop-filter: blur(48px) saturate(200%);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      padding: 6px 16px;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12), inset 0 1px 2px #FFFFFF;
+      box-shadow: 0 12px 36px rgba(15, 23, 42, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
     }
 
     .dock-brand-item {
@@ -1946,12 +2265,12 @@
       width: 44px;
       height: 44px;
       border-radius: 22.5%;
-      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      border: 1.5px solid #CBD5E1;
+      border: 1.5px solid rgba(255, 255, 255, 0.5);
       background: #ffffff;
       padding: 5px;
       transition: all 0.2s ease;
@@ -1964,8 +2283,8 @@
     }
 
     .dock-brand-item.active .dock-icon-box {
-      border-color: #0EA5E9;
-      box-shadow: 0 0 0 2.5px #0EA5E9, 0 8px 20px rgba(14, 165, 233, 0.3);
+      border-color: #fff;
+      box-shadow: 0 0 0 2.5px #fff, 0 8px 20px rgba(0, 0, 0, 0.4);
       transform: translateY(-2px);
     }
 
@@ -1976,7 +2295,7 @@
       background: #0EA5E9;
       margin-top: 3px;
       opacity: 0;
-      box-shadow: 0 0 6px #38BDF8;
+      box-shadow: 0 0 6px rgba(14, 165, 233, 0.8);
       transition: opacity 0.2s ease;
     }
     .dock-brand-item.active .dock-active-dot {
@@ -1986,18 +2305,19 @@
     .dock-tooltip {
       position: absolute;
       top: -30px;
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(10px);
       color: #fff;
       font-size: 10.5px;
       font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 6px;
+      padding: 3px 9px;
+      border-radius: 8px;
       white-space: nowrap;
       pointer-events: none;
       opacity: 0;
       transform: translateY(4px);
       transition: all 0.15s ease;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
     }
     .dock-brand-item:hover .dock-tooltip {
       opacity: 1;
@@ -2007,113 +2327,50 @@
     .dock-separator {
       width: 1px;
       height: 36px;
-      background: #CBD5E1;
+      background: rgba(255, 255, 255, 0.35);
       margin: 0 2px;
     }
 
     /* Distinctive dock backgrounds */
-    .bg-all { background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%) !important; }
+    .bg-all { background: linear-gradient(135deg, #0EA5E9 0%, #7DD3FC 100%) !important; }
     .bg-puma { background: #000000 !important; }
     .bg-ck { background: #ffffff !important; }
     .bg-montblanc { background: #000000 !important; }
     .bg-cartier { background: #550007 !important; }
     .bg-rayban { background: #d40000 !important; }
-    .bg-sync { background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%) !important; }
+    .bg-sync { background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%) !important; }
     .bg-zalo { background: linear-gradient(135deg, #0084FF 0%, #0056C6 100%) !important; }
-    .bg-music-toggle { background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%) !important; }
+    .bg-music-toggle { background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%) !important; }
 
     /* ==========================================================================
-       5. MOBILE ADAPTIVE RESPONSIVE OPTIMIZATION (CHUẨN TỐI GIẢN NHƯ INDEX.HTML)
+       5. MOBILE ADAPTIVE RESPONSIVE OPTIMIZATION
        ========================================================================== */
-    /* Mobile Screen Toggle Bar (Chỉ hiển thị trên màn hình nhỏ) */
+    /* Mobile Screen Toggle Bar (Only visible on small screens) */
     .mobile-tab-switcher {
       display: none;
       justify-content: center;
-      gap: 4px;
-      padding: 4px;
-      background: #F1F5F9;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      border-radius: 9999px;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(0, 0, 0, 0.4);
       z-index: 95;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-      max-width: 440px;
-      margin: 6px auto 2px;
-      width: calc(100% - 20px);
-      box-sizing: border-box;
     }
     .mobile-tab-btn {
       flex: 1;
-      padding: 7px 10px;
-      border-radius: 9999px;
-      font-size: 11.5px;
+      max-width: 170px;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 12px;
       font-weight: 700;
-      color: #64748B;
-      background: transparent;
-      border: none;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       cursor: pointer;
       text-align: center;
-      font-family: var(--font-main);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      white-space: nowrap;
     }
     .mobile-tab-btn.active {
-      background: #FFFFFF !important;
-      color: #0284C7 !important;
-      font-weight: 800 !important;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
-    }
-
-    /* Thanh phân loại cuộn ngang trong Grid Kính */
-    .grid-cat-scroll-wrap {
-      display: none;
-      overflow-x: auto;
-      padding: 2px 0 10px;
-      margin-bottom: 8px;
-      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-      -webkit-overflow-scrolling: touch;
-      flex-shrink: 0;
-    }
-    .grid-cat-scroll-wrap::-webkit-scrollbar { display: none; }
-    .grid-cat-scroll-wrap .cat-btn-group {
-      display: flex;
-      flex-direction: row;
-      gap: 6px;
-      white-space: nowrap;
-    }
-    .grid-cat-scroll-wrap .cat-toggle-btn {
-      padding: 6px 12px;
-      border-radius: 9999px;
-      font-size: 11px;
-      font-weight: 700;
-      background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      color: #334155;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      flex-shrink: 0;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .grid-cat-scroll-wrap .cat-toggle-btn.active {
       background: #0284C7;
-      border-color: #0284C7;
-      color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
-    }
-    .grid-cat-scroll-wrap .cat-toggle-btn .count {
-      font-size: 9px;
-      padding: 1px 5px;
-      border-radius: 6px;
-      background: rgba(0, 0, 0, 0.06);
-    }
-    .grid-cat-scroll-wrap .cat-toggle-btn.active .count {
-      background: rgba(255, 255, 255, 0.25);
-      color: #FFFFFF;
+      border-color: #fff;
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
     }
 
     /* Music Upload Toolbar */
@@ -2149,608 +2406,147 @@
       transform: translateY(-1px);
     }
 
-    @media (min-width: 769px) and (max-width: 1120px) {
-      .col-left-panel {
-        display: none !important; /* Hide weather widget on medium desktop to keep Duo + Catalog side-by-side */
+    @media (max-width: 1120px) {
+      /* Chỉ ẩn cột trái khi MỞ NGANG — khi GẬP vẫn hiện Phân loại nhanh */
+      .app-workspace.mode-unfolded .col-left-panel {
+        display: none !important;
+      }
+      .app-workspace.mode-folded .col-left-panel {
+        display: flex !important;
+        width: 220px;
       }
       .col-center-panel {
         margin: 0;
       }
     }
 
-    /* ==========================================================================
-       GIAO DIỆN ĐIỆN THOẠI (<= 768px): TỐI GIẢN NHƯ PHIÊN BẢN INDEX.HTML
-       ========================================================================== */
-    @media (max-width: 768px) {
+    /* Thanh chọn kính ngang dưới cùng (mobile) */
+    .mobile-glass-strip {
+      display: none;
+      position: relative;
+      z-index: 90;
+      width: 100%;
+      padding: 8px 10px 10px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(24px);
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .mobile-glass-strip::-webkit-scrollbar { display: none; }
+    .mobile-glass-chip {
+      flex: 0 0 auto;
+      width: 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .mobile-glass-chip.selected {
+      border-color: #0EA5E9;
+      background: rgba(14, 165, 233, 0.1);
+    }
+    .mobile-glass-chip img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+      padding: 4px;
+    }
+    .mobile-glass-chip span {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #0F172A;
+      max-width: 70px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    @media (max-width: 680px) {
       html, body {
-        width: 100% !important;
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
+        overflow: hidden;
+        height: 100%;
+        height: 100dvh;
       }
-      body {
-        background: #FAF8F5 !important; /* Nền be kem sáng nhẹ nhàng, dịu mắt chuẩn index.html */
-        perspective: none !important;
-        overflow: hidden !important;
-      }
-
-      .ambient-orb {
-        display: none !important; /* Tắt quả cầu làm mờ để đạt 60fps mượt mà */
-      }
-
-      /* Thanh điều hướng đầu trang tối giản chuẩn index.html */
       .top-system-nav {
         height: 44px;
         padding: 0 10px;
-        width: 100% !important;
-        max-width: 100vw !important;
-        box-sizing: border-box !important;
-        background: rgba(255, 255, 255, 0.96) !important;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+        grid-template-columns: auto 1fr auto;
       }
-      .nav-badge-pill,
+      .nav-center-group,
+      .nav-weather-pill,
+      .nav-btn-label,
       .duo-mode-segmented-pill,
-      .duo-gesture-hint-pill,
-      #weather-mini-pill {
-        display: none !important; /* Chỉ hiện Duo khi gập trên điện thoại, ẩn nút mở ngang desktop */
+      .mobile-tab-switcher,
+      .col-left-panel,
+      .col-right-panel,
+      .app-dock-bar {
+        display: none !important;
       }
       .nav-brand-title {
         font-size: 14px;
-        font-weight: 800;
-        letter-spacing: -0.3px;
-        color: #1D1D1F;
-        white-space: nowrap;
-      }
-      .nav-right-group {
-        gap: 6px;
-        flex-shrink: 0;
       }
       .nav-right-group .nav-btn-link {
-        padding: 4px 8px !important;
-        font-size: 11px !important;
-        border-radius: 9999px !important;
-        border-color: rgba(0, 0, 0, 0.08);
-        white-space: nowrap !important;
+        padding: 5px 8px;
+        font-size: 11px;
       }
-      .nav-right-group button.nav-btn-link {
-        background: #DCFCE7 !important;
-        border: 1px solid #10B981 !important;
-        color: #065F46 !important;
-        font-weight: 700 !important;
-      }
-
-      /* Thanh chuyển Tab trên điện thoại */
-      .mobile-tab-switcher {
-        display: flex !important;
-        width: calc(100% - 20px) !important;
-        max-width: 370px !important;
-        margin: 5px auto 2px !important;
-        padding: 3px !important;
-        gap: 3px !important;
-        box-sizing: border-box !important;
-        flex-shrink: 0 !important;
-      }
-      .mobile-tab-btn {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
-        padding: 6px 4px !important;
-        font-size: 11.5px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-      }
-
-      .app-workspace {
+      .app-workspace,
+      .app-workspace.mode-unfolded,
+      .app-workspace.mode-folded {
         flex-direction: column !important;
         align-items: center !important;
+        justify-content: flex-start !important;
         overflow: hidden !important;
-        padding: 4px 10px 8px !important;
-        gap: 8px !important;
-        width: 100% !important;
-        max-width: 100vw !important;
-        box-sizing: border-box !important;
-        perspective: none !important;
-        transform-style: flat !important;
+        padding: 6px 8px 4px !important;
+        gap: 0 !important;
+        flex: 1;
+        min-height: 0;
       }
-
-      /* Khung 3 cột: Chỉ hiện 1 cột active tương ứng với Tab được chọn */
-      .col-center-panel.mobile-hidden,
-      .col-right-panel.mobile-hidden,
-      .col-left-panel.mobile-hidden {
-        display: none !important;
-      }
-      .col-center-panel.mobile-hidden {
-        position: absolute !important;
-        left: -9999px !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-      }
-
       .col-center-panel {
         width: 100% !important;
-        max-width: 440px !important;
-        margin: 0 auto !important;
-        display: flex;
-        flex-direction: column;
+        max-width: 100% !important;
+        display: flex !important;
+        flex: 1;
+        min-height: 0;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: center;
       }
-
-      /* ----------------------------------------------------------------------
-         KHUNG THIẾT BỊ IPHONE DUO KHI GẬP TRÊN MOBILE:
-         TỐI GIẢN TOÀN BỘ, BỎ BẢN LỀ ĐEN CỒNG KỀNH, MÀU TRẮNG SÁNG NHẸ NHÀNG
-         ---------------------------------------------------------------------- */
-      .app-workspace.mode-folded .foldable-duo-device,
-      .app-workspace.mode-unfolded .foldable-duo-device {
-        width: 100% !important;
-        max-width: 440px !important;
-        height: calc(100dvh - 134px) !important;
-        max-height: 640px !important;
-        min-height: 480px !important;
+      .app-workspace.mode-unfolded .foldable-duo-device,
+      .app-workspace.mode-folded .foldable-duo-device {
+        width: min(100%, 360px) !important;
+        max-width: 360px !important;
+        height: min(520px, calc(100dvh - 160px)) !important;
+        min-height: 0 !important;
+        max-height: calc(100dvh - 160px) !important;
         aspect-ratio: auto !important;
-        background: #FFFFFF !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 20px !important;
-        padding: 0 !important; /* Xóa bỏ padding 18px đen của bản lề cũ */
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
-        overflow: hidden !important;
-        transform: none !important;
       }
-
-      /* Ẩn bản lề đen skeuomorphic trên điện thoại */
-      .app-workspace.mode-folded .foldable-hinge-spine,
-      .app-workspace.mode-unfolded .foldable-hinge-spine {
+      .app-workspace.mode-unfolded .duo-right-half,
+      .app-workspace.mode-unfolded .foldable-hinge-spine,
+      .app-workspace.mode-unfolded .duo-internal-weather-slot {
         display: none !important;
       }
-
-      .app-workspace.mode-folded .duo-left-half,
       .app-workspace.mode-unfolded .duo-left-half {
-        width: 100% !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
         flex: 1 1 100% !important;
-        height: 100% !important;
-        border-radius: 20px !important;
-        overflow: hidden !important;
-        position: relative !important;
-      }
-
-      .app-workspace.mode-folded .duo-left-half .foldable-screen-viewport,
-      .app-workspace.mode-unfolded .duo-left-half .foldable-screen-viewport {
-        position: absolute !important;
-        inset: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        border-radius: 20px !important;
-        border: none !important;
-        box-shadow: none !important;
-        background: #FFFFFF !important;
-      }
-
-      /* Ẩn hoàn toàn nửa phải khi ở chế độ gập trên mobile */
-      .duo-right-half {
-        display: none !important;
-      }
-
-      /* Floating Action Pill bên phải gọn gàng, không che khuất mặt khi soi gương */
-      .duo-right-action-pill {
-        top: 50px !important;
-        right: 8px !important;
-        bottom: auto !important;
-        width: 32px !important;
-        padding: 5px 3px !important;
-        border-radius: 16px !important;
-        background: rgba(255, 255, 255, 0.92) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
-        gap: 5px !important;
-      }
-      .duo-pill-section {
-        gap: 4px !important;
-      }
-      .duo-pill-btn {
-        width: 25px !important;
-        height: 25px !important;
-        font-size: 11px !important;
-        background: #F8FAFC !important;
-        border: 1px solid #E2E8F0 !important;
-        color: #0F172A !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
-      }
-      .duo-pill-btn:hover, .duo-pill-btn:active {
-        background: #0284C7 !important;
-        color: #FFFFFF !important;
-        border-color: #0284C7 !important;
-      }
-
-      /* Màn hình AR trong khung Duo khi gập */
-      .ar-screen-top-bar {
-        top: 8px !important;
-        left: 10px !important;
-        right: 46px !important;
-        gap: 6px !important;
-      }
-      .btn-back-to-music {
-        padding: 5px 10px !important;
-        font-size: 11px !important;
-        border-radius: 9999px !important;
-        background: rgba(255, 255, 255, 0.95) !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        color: #0F172A !important;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
-      }
-      #ai-face-badge-pill {
-        padding: 3px 8px !important;
-        font-size: 10px !important;
-        border-radius: 9999px !important;
-        max-width: 140px !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
-      }
-
-      /* Tầng điều khiển camera AR: nằm rõ ràng phía trên thanh thông số kính */
-      .ar-camera-controls-layer {
-        bottom: 74px !important;
-        left: 10px !important;
-        right: 42px !important;
-      }
-      .ar-tool-btn {
-        width: 28px !important;
-        height: 28px !important;
-        font-size: 11px !important;
-        background: rgba(255, 255, 255, 0.92) !important;
-        color: #0F172A !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
-      }
-      .ar-shutter-hero-btn {
-        width: 48px !important;
-        height: 48px !important;
-        border: 3px solid #FFFFFF !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
-      }
-      .pip-camera-box, .pip-captured-box {
-        width: 42px !important;
-        height: 32px !important;
-        border-radius: 8px !important;
-        border: 1.5px solid #FFFFFF !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-      }
-      .pip-badge-text {
-        display: none !important;
-      }
-
-      /* Thanh thông số kính dưới đáy khung AR */
-      .ar-bottom-specs-bar {
-        background: rgba(255, 255, 255, 0.97) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 0 0 20px 20px !important;
-        padding: 8px 10px !important;
-        min-height: 64px !important;
-        box-sizing: border-box !important;
-        gap: 6px !important;
-      }
-      .specs-title {
-        font-size: 12.5px !important;
-        font-weight: 800 !important;
-        color: #0F172A !important;
-        max-width: 115px !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
-      }
-      #ar-glass-sale {
-        font-size: 13.5px !important;
-        font-weight: 800 !important;
-        color: #0284C7 !important;
-      }
-      .specs-pill-row {
-        gap: 3px !important;
-      }
-      .spec-tag-item {
-        font-size: 8.5px !important;
-        padding: 1px 5px !important;
-      }
-      .specs-actions-group {
-        gap: 4px !important;
-      }
-      .btn-specs-order {
-        padding: 6px 9px !important;
-        font-size: 11px !important;
-        border-radius: 9999px !important;
-        background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%) !important;
-        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3) !important;
-      }
-      .btn-specs-zalo {
-        padding: 6px 8px !important;
-        font-size: 10.5px !important;
-        border-radius: 9999px !important;
-      }
-
-      /* Màn hình phát nhạc Liquid Music khi xem trong khung Duo */
-      .duo-music-screen {
-        padding: 12px 14px 20px !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-      }
-      .btn-custom-music-upload, .btn-custom-cover-upload {
-        background: #FFFFFF !important;
-        border: 1px solid #CBD5E1 !important;
-        color: #0F172A !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-      }
-      .music-art-hero {
-        width: 140px !important;
-        height: 140px !important;
-        border-radius: 18px !important;
-        margin: 6px auto 10px !important;
-        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1) !important;
-      }
-      .cta-open-ar-banner {
-        margin: 8px 0 !important;
-        padding: 10px 12px !important;
-        border-radius: 14px !important;
-        background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%) !important;
-        border: none !important;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3) !important;
-      }
-      .cta-open-ar-title {
-        font-size: 12px !important;
-        color: #FFFFFF !important;
-        font-weight: 800 !important;
-      }
-      .cta-open-ar-sub {
-        font-size: 10px !important;
-        color: rgba(255, 255, 255, 0.9) !important;
-      }
-      .album-track-list {
-        max-height: 180px !important;
-        overflow-y: auto !important;
-      }
-      .track-left {
-        flex: 1 !important;
+        max-width: 100% !important;
         min-width: 0 !important;
-      }
-      .track-name-text {
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
-        display: block !important;
-      }
-
-      /* ----------------------------------------------------------------------
-         DANH MỤC KÍNH (COL-RIGHT-PANEL): KHUNG TRẮNG TỐI GIẢN CHUẨN INDEX.HTML
-         ---------------------------------------------------------------------- */
-      .col-right-panel {
-        width: 100% !important;
-        max-width: 440px !important;
-        margin: 0 auto !important;
-        max-height: calc(100dvh - 134px) !important;
-        height: calc(100dvh - 134px) !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding: 0 2px 40px !important;
-        box-sizing: border-box !important;
-      }
-      .col-right-panel::-webkit-scrollbar,
-      .col-left-panel::-webkit-scrollbar,
-      .squircle-app-grid::-webkit-scrollbar {
-        width: 3px !important;
-      }
-      .col-right-panel::-webkit-scrollbar-thumb,
-      .col-left-panel::-webkit-scrollbar-thumb,
-      .squircle-app-grid::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.15) !important;
-        border-radius: 9999px !important;
-      }
-      .col-right-panel .grid-panel-container {
-        background: #FFFFFF !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
         border-radius: 20px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-        padding: 12px 14px 24px !important;
-        min-height: 100% !important;
-        box-sizing: border-box !important;
+      }
+      .mobile-glass-strip {
         display: flex !important;
-        flex-direction: column !important;
-      }
-      .grid-top-bar {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 8px !important;
-        margin-bottom: 8px !important;
-      }
-      .grid-brand-title {
-        font-size: 15px !important;
-        font-weight: 800 !important;
-        justify-content: space-between !important;
-      }
-      .grid-search-input-wrap {
-        width: 100% !important;
-        border-radius: 9999px !important;
-        padding: 7px 14px !important;
-        border: 1px solid #CBD5E1 !important;
-        background: #F8FAFC !important;
-        box-sizing: border-box !important;
-      }
-      .grid-cat-scroll-wrap {
-        display: block !important;
-      }
-
-      /* Lưới kính 2 cột tối giản, thoáng mắt giống index.html */
-      .app-workspace.mode-folded .col-right-panel .squircle-app-grid,
-      .app-workspace.mode-unfolded .squircle-app-grid,
-      .col-right-panel .squircle-app-grid,
-      .squircle-app-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        padding: 4px 2px 40px !important;
-        overflow-y: auto !important;
-      }
-      .glass-app-item {
-        background: #F8FAFC !important;
-        border: 1px solid rgba(0, 0, 0, 0.06) !important;
-        border-radius: 16px !important;
-        padding: 10px 8px !important;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
-        transition: all 0.2s ease !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        box-sizing: border-box !important;
-      }
-      .glass-app-item.selected {
-        border-color: #0284C7 !important;
-        background: #F0F9FF !important;
-        box-shadow: 0 0 0 2px #0284C7, 0 4px 12px rgba(2, 132, 199, 0.15) !important;
-      }
-      .app-icon-squircle {
-        width: 100% !important;
-        height: 85px !important;
-        border-radius: 12px !important;
-        background: #FFFFFF !important;
-        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
-        border: none !important;
-        padding: 4px !important;
-        box-sizing: border-box !important;
-      }
-      .app-icon-title {
-        font-size: 12px !important;
-        font-weight: 700 !important;
-        color: #1D1D1F !important;
-        max-width: 100% !important;
-        margin-top: 6px !important;
-        white-space: normal !important;
-        display: -webkit-box !important;
-        -webkit-line-clamp: 2 !important;
-        line-clamp: 2 !important;
-        -webkit-box-orient: vertical !important;
-        min-height: 31px !important;
-        line-height: 1.3 !important;
-        text-align: center !important;
-      }
-      .app-specs-pill-badge {
-        font-size: 9.5px !important;
-        background: #E0F2FE !important;
-        color: #0369A1 !important;
-        border: 1px solid #BAE6FD !important;
-        border-radius: 6px !important;
-        padding: 2px 6px !important;
-        max-width: 100% !important;
-        margin-top: 3px !important;
-        text-align: center !important;
-      }
-      .app-icon-price {
-        font-size: 13px !important;
-        font-weight: 800 !important;
-        color: #0284C7 !important;
-        margin-top: 3px !important;
-        text-align: center !important;
-      }
-      .btn-card-quick-order {
-        margin-top: 6px !important;
-        padding: 6px 10px !important;
-        font-size: 11px !important;
-        font-weight: 700 !important;
-        border-radius: 9999px !important;
-        width: 100% !important;
-        background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%) !important;
-        color: #FFFFFF !important;
-        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25) !important;
-      }
-
-      /* ----------------------------------------------------------------------
-         THỜI TIẾT & LỜI KHUYÊN UV (COL-LEFT-PANEL): KHUNG TRẮNG TỐI GIẢN
-         ---------------------------------------------------------------------- */
-      .col-left-panel {
-        display: flex !important;
-        width: 100% !important;
-        max-width: 440px !important;
-        margin: 0 auto !important;
-        max-height: calc(100dvh - 134px) !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        flex-direction: column !important;
-        gap: 10px !important;
-        padding: 0 2px 40px !important;
-        box-sizing: border-box !important;
-      }
-      .liquid-weather-widget {
-        background: #FFFFFF !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 20px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-        padding: 16px !important;
-      }
-      .weather-location-pill {
-        background: #E0F2FE !important;
-        color: #0369A1 !important;
-        border: 1px solid #BAE6FD !important;
-        border-radius: 9999px !important;
-        padding: 2px 8px !important;
-        font-size: 11px !important;
-        font-weight: 700 !important;
-        display: inline-block !important;
-      }
-      .quick-category-box {
-        background: #FFFFFF !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 20px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
-        padding: 14px !important;
-      }
-      .cat-box-heading {
-        font-size: 14px !important;
-        font-weight: 800 !important;
-        margin-bottom: 10px !important;
-      }
-      .cat-btn-group {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 8px !important;
-      }
-      .cat-toggle-btn {
-        padding: 8px 12px !important;
-        border-radius: 12px !important;
-        font-size: 12px !important;
-        border: 1px solid #E2E8F0 !important;
-        background: #F8FAFC !important;
-      }
-      .cat-toggle-btn.active {
-        background: #0284C7 !important;
-        border-color: #0284C7 !important;
-        color: #FFFFFF !important;
-      }
-
-      /* Thanh dock thương hiệu dưới cùng */
-      .app-dock-bar {
-        padding: 3px 6px 6px !important;
       }
       .liquid-floating-dock {
-        background: rgba(255, 255, 255, 0.96) !important;
-        backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        border-radius: 9999px !important;
-        padding: 4px 8px !important;
-        gap: 6px !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
-        max-width: calc(100vw - 20px) !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-      }
-      .liquid-floating-dock::-webkit-scrollbar { display: none; }
-      .dock-icon-box {
-        width: 34px !important;
-        height: 34px !important;
-        border-radius: 10px !important;
+        display: none;
       }
     }
 
@@ -2829,12 +2625,14 @@
       border-bottom: 1px solid rgba(15, 23, 42, 0.08);
     }
     .modal-title-main {
-      font-size: 17px;
+      font-family: var(--font-display);
+      font-size: 17.5px;
       font-weight: 800;
       color: #0F172A;
       display: flex;
       align-items: center;
       gap: 8px;
+      letter-spacing: -0.03em;
     }
     .btn-close-modal {
       width: 32px;
@@ -2963,36 +2761,37 @@
       color: #0F172A;
     }
     .cart-total-amount {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 800;
-      color: #0284C7;
+      color: #0EA5E9;
       font-family: var(--font-display);
+      letter-spacing: -0.02em;
     }
 
     .btn-checkout-submit {
       width: 100%;
-      background: linear-gradient(135deg, #0284C7 0%, #00A3FF 100%);
+      background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
       color: #fff !important;
       padding: 12px 18px;
       border-radius: 16px;
-      font-family: var(--font-main) !important;
-      font-size: 13.5px;
+      font-family: var(--font-display) !important;
+      font-size: 14px;
       font-weight: 700 !important;
-      letter-spacing: 0.2px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      letter-spacing: -0.02em;
+      border: 1px solid rgba(255, 255, 255, 0.45);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+      box-shadow: 0 6px 22px rgba(14, 165, 233, 0.38);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       -webkit-font-smoothing: antialiased;
     }
     .btn-checkout-submit:hover {
       transform: translateY(-1px) scale(1.02);
-      box-shadow: 0 6px 24px rgba(2, 132, 199, 0.55);
-      background: linear-gradient(135deg, #0369A1 0%, #38BDF8 100%);
+      box-shadow: 0 8px 26px rgba(14, 165, 233, 0.52);
+      background: linear-gradient(135deg, #0284C7 0%, #7DD3FC 100%);
     }
 
     /* Order Success Screen */
@@ -3086,46 +2885,42 @@
   <div class="ambient-orb orb-2"></div>
   <div class="ambient-orb orb-3"></div>
 
-  <!-- Top System Navigation Bar -->
+  <!-- Top System Navigation Bar — balanced 3-zone -->
   <header class="top-system-nav">
     <div class="nav-brand-group">
-      <div style="font-size: 16px;">⚡</div>
+      <span class="nav-brand-mark">⚡</span>
       <span class="nav-brand-title">SR89 Optic</span>
-      <span class="nav-badge-pill">Foldable Edition</span>
     </div>
 
-    <!-- Mode Switcher: Mở Ngang Duo / Gập Lại Cover Screen -->
-    <div class="duo-mode-segmented-pill" id="duo-mode-switcher">
-      <button class="seg-btn active" id="seg-btn-unfolded" onclick="setDuoMode('unfolded')" title="Mở ngang 2 màn hình chuẩn Duo">
-        <span>📖 Mở Ngang Duo</span>
-      </button>
-      <button class="seg-btn" id="seg-btn-folded" onclick="setDuoMode('folded')" title="Gập lại màn hình ngoài Cover">
-        <span>📱 Gập Lại Cover</span>
-      </button>
-    </div>
-
-    <!-- Swipe Gesture Hint Pill -->
-    <div class="duo-gesture-hint-pill" onclick="toggleDuoFoldMode()" title="Gạt trái/phải hoặc chạm để chuyển đổi Gập/Mở">
-      <span id="duo-gesture-hint">👈 Gạt trái để <b>Gập</b> • Duo 2 màn hình</span>
+    <div class="nav-center-group">
+      <div class="duo-mode-segmented-pill" id="duo-mode-switcher">
+        <button class="seg-btn active" id="seg-btn-unfolded" onclick="setDuoMode('unfolded')" title="Mở ngang 2 màn hình">
+          <span>📖 Mở</span>
+        </button>
+        <button class="seg-btn" id="seg-btn-folded" onclick="setDuoMode('folded')" title="Gập màn hình Cover">
+          <span>📱 Gập</span>
+        </button>
+      </div>
     </div>
 
     <div class="nav-right-group">
-      <div id="weather-mini-pill" style="font-size: 11.5px; font-weight: 700; color: #FFD60A; display: flex; align-items: center; gap: 4px;">
-        <span>☀️ 29°C Hà Nội</span>
+      <div id="weather-mini-pill" class="nav-weather-pill">
+        <span>☀️ 29°</span>
       </div>
-      <button onclick="openOrdersManagerModal()" class="nav-btn-link" style="background: rgba(16,185,129,0.22); border: 1.5px solid #10B981; color: #065F46; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="Xem các mặt hàng đã đặt & hủy đơn nếu đổi ý">
+      <button onclick="openOrdersManagerModal()" class="nav-btn-link nav-btn-orders" title="Đơn hàng đã đặt">
         <span>🛒</span>
-        <span>Đơn Hàng</span>
+        <span class="nav-btn-label">Đơn hàng</span>
       </button>
-      <a href="index.html" class="nav-btn-link">Trang Chủ</a>
+      <a href="index.html" class="nav-btn-link" title="Trang chủ shop">
+        <span class="nav-btn-label">Shop</span>
+      </a>
     </div>
   </header>
 
-  <!-- Mobile Screen Switcher (Tối giản chuẩn index.html) -->
-  <div class="mobile-tab-switcher" id="mobile-tab-switcher">
-    <button class="mobile-tab-btn active" id="btn-tab-device" onclick="switchMobileTab('device')">📱 Gương AR</button>
-    <button class="mobile-tab-btn" id="btn-tab-grid" onclick="switchMobileTab('grid')">👓 Chọn Kính</button>
-    <button class="mobile-tab-btn" id="btn-tab-weather" onclick="switchMobileTab('weather')">🌤️ Thời Tiết</button>
+  <!-- Mobile Screen Switcher (Only appears on mobile devices <= 680px) -->
+  <div class="mobile-tab-switcher">
+    <button class="mobile-tab-btn active" id="btn-tab-device" onclick="switchMobileTab('device')">📱 Màn Hình Gập Duo</button>
+    <button class="mobile-tab-btn" id="btn-tab-grid" onclick="switchMobileTab('grid')">👓 Danh Mục Kính</button>
   </div>
 
   <!-- Main Workspace: Chuyển đổi linh hoạt giữa Unfolded (Dual-Screen) và Folded (Cover Screen) -->
@@ -3134,7 +2929,7 @@
     <!-- ====================================================================
          CỘT NGOÀI TRÁI: DÙNG TRONG CHẾ ĐỘ GẬP (FOLDED)
          ==================================================================== -->
-    <aside class="col-left-panel mobile-hidden" id="col-left-panel">
+    <aside class="col-left-panel" id="col-left-panel">
       <!-- Exterior Weather Slot -->
       <div class="ext-weather-slot" id="ext-weather-slot">
         <!-- Weather Card Widget -->
@@ -3158,16 +2953,7 @@
           <div class="weather-meta-row">
             <span>Cao: 32°</span>
             <span>Thấp: 23°</span>
-            <span>UV: 6 (Cao)</span>
-          </div>
-
-          <!-- UV Advisory - Ít chữ, gọn gàng, súc tích -->
-          <div class="weather-eyewear-advice" onclick="openUvAdviceModal()" title="Bấm xem chi tiết lời khuyên">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-              <strong>🛡️ Lời khuyên UV 6:</strong>
-              <span class="advice-expand-hint">Chi tiết ›</span>
-            </div>
-            <div style="margin-top: 3px; opacity: 0.92; font-size: 11px;">Nên đeo kính râm UV400 hoặc tròng đổi màu chống chói.</div>
+            <span>UV: 6</span>
           </div>
         </div>
       </div>
@@ -3223,106 +3009,113 @@
                  SCREEN STATE 1: ALBUM NHẠC THỜI TRANG ĐEO KÍNH (EYEWEAR FASHION LOUNGE)
                  -------------------------------------------------------------- -->
             <div class="duo-music-screen" id="duo-music-screen">
-              <div class="music-top-bar">
-                <span>9:41</span>
-                <span>📶 100%</span>
+              <!-- Cover -->
+              <div class="music-art-hero" onclick="toggleScreenMode('ar')" title="Mở thử kính AR" id="music-art-hero">
+                <img src="" id="music-cover-img" alt="" style="display:none;">
+                <!-- Bìa thiết kế mặc định — mesh gradient hiện đại -->
+                <div id="cover-fallback" class="cover-fallback-art">
+                  <div class="cover-fallback-inner">
+                    <!-- Icon kính mắt hiện đại: gọng + tròng phản chiếu -->
+                    <svg class="cover-glasses-icon" viewBox="0 0 120 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="rimGrad" x1="0" y1="0" x2="120" y2="48" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#FFFFFF"/>
+                          <stop offset="0.5" stop-color="#BAE6FD"/>
+                          <stop offset="1" stop-color="#38BDF8"/>
+                        </linearGradient>
+                        <linearGradient id="lensGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop stop-color="rgba(255,255,255,0.35)"/>
+                          <stop offset="1" stop-color="rgba(56,189,248,0.15)"/>
+                        </linearGradient>
+                        <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feGaussianBlur stdDeviation="1.2" result="b"/>
+                          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                      </defs>
+                      <!-- Left lens -->
+                      <ellipse cx="32" cy="24" rx="22" ry="16" fill="url(#lensGrad)" stroke="url(#rimGrad)" stroke-width="2.6" filter="url(#softGlow)"/>
+                      <path d="M18 18c4-3 10-4 16-2" stroke="rgba(255,255,255,0.55)" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+                      <!-- Bridge -->
+                      <path d="M54 24h12" stroke="url(#rimGrad)" stroke-width="2.4" stroke-linecap="round"/>
+                      <!-- Right lens -->
+                      <ellipse cx="88" cy="24" rx="22" ry="16" fill="url(#lensGrad)" stroke="url(#rimGrad)" stroke-width="2.6" filter="url(#softGlow)"/>
+                      <path d="M74 18c4-3 10-4 16-2" stroke="rgba(255,255,255,0.55)" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+                      <!-- Temples -->
+                      <path d="M10 24H4" stroke="url(#rimGrad)" stroke-width="2.2" stroke-linecap="round"/>
+                      <path d="M110 24h6" stroke="url(#rimGrad)" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="music-cover-actions" onclick="event.stopPropagation()">
+                  <label for="music-file-input" class="music-icon-btn" title="Thêm nhạc">📁</label>
+                  <input type="file" id="music-file-input" accept="audio/*" multiple style="display:none;" onchange="handleMusicFilesUpload(event)">
+                  <label for="cover-file-input" class="music-icon-btn" title="Đổi bìa">🖼️</label>
+                  <input type="file" id="cover-file-input" accept="image/*" style="display:none;" onchange="handleCoverUpload(event)">
+                </div>
               </div>
 
-              <!-- Album Cover Artwork - High Fashion Luxury Eyewear -->
-              <div class="music-art-hero" onclick="toggleScreenMode('ar')" title="Chạm để mở thử kính AR">
-                <img src="images/eyewear_fashion_cover.jpg" id="music-cover-img" alt="Eyewear Fashion Lounge • SR89 Optic">
+              <!-- Title + play -->
+              <div class="album-header-details">
+                <h2 class="album-title-main">Fashion Lounge</h2>
+                <div class="album-artist-sub">SR89 Optic</div>
               </div>
 
-
-
-              <!-- Music Upload Toolbar -->
-              <div class="music-upload-toolbar">
-                <label for="music-file-input" class="btn-custom-music-upload" title="Tải các bài hát MP3/WAV/M4A từ máy tính">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
-                  <span id="upload-music-label">Upload Nhạc Từ Máy</span>
-                </label>
-                <input type="file" id="music-file-input" accept="audio/*" multiple style="display:none;" onchange="handleMusicFilesUpload(event)">
-
-                <label for="cover-file-input" class="btn-custom-cover-upload" title="Đổi ảnh bìa Album">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-                  <span>Đổi Bìa</span>
-                </label>
-                <input type="file" id="cover-file-input" accept="image/*" style="display:none;" onchange="handleCoverUpload(event)">
-              </div>
-
-              <!-- Music Controls Row -->
               <div class="album-controls-row">
                 <button class="ctrl-circle-btn" onclick="shuffleTracks()" title="Xáo trộn">🔀</button>
                 <button class="ctrl-play-hero-btn" id="btn-hero-play" onclick="toggleAudioPlay()">
                   <span id="hero-play-icon">▶</span>
-                  <span id="hero-play-text">Phát Nhạc</span>
+                  <span id="hero-play-text">Phát</span>
                 </button>
-                <button class="ctrl-circle-btn" onclick="addFavorite()" title="Thêm vào yêu thích">＋</button>
+                <button class="ctrl-circle-btn" onclick="toggleScreenMode('ar')" title="Thử kính AR">👓</button>
               </div>
 
-              <!-- Interactive CTA Banner -->
-              <div class="cta-open-ar-banner" onclick="toggleScreenMode('ar')">
-                <div class="cta-open-ar-title">
-                  <span>👓 CHẠM MỞ GƯƠNG THỬ KÍNH AR</span>
-                  <span>✨</span>
-                </div>
-                <div class="cta-open-ar-sub">Bấm vào bất kỳ kính nào để soi gương trực tiếp</div>
-              </div>
+              <!-- Short CTA -->
+              <button class="cta-open-ar-banner" onclick="toggleScreenMode('ar')" type="button">
+                <span class="cta-open-ar-title">👓 Thử kính AR</span>
+              </button>
 
-              <!-- Tracklist (4 bài mặc định từ thư mục Music) -->
+              <!-- Tracklist -->
               <div class="album-track-list">
                 <div class="track-row playing" onclick="playTrack(1)">
                   <div class="track-left">
                     <span class="track-num">1</span>
-                    <div class="eq-bars">
-                      <div class="eq-bar"></div>
-                      <div class="eq-bar"></div>
-                      <div class="eq-bar"></div>
-                    </div>
+                    <div class="eq-bars"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
                     <span class="track-name-text">Nothing's Gonna Change My Love For You</span>
                   </div>
-                  <span>•••</span>
                 </div>
-
                 <div class="track-row" onclick="playTrack(2)">
                   <div class="track-left">
                     <span class="track-num">2</span>
                     <span class="track-name-text">Killing Me Softly With His Song</span>
                   </div>
-                  <span>•••</span>
                 </div>
-
                 <div class="track-row" onclick="playTrack(3)">
                   <div class="track-left">
                     <span class="track-num">3</span>
                     <span class="track-name-text">Saving All My Love For You</span>
                   </div>
-                  <span>•••</span>
                 </div>
-
                 <div class="track-row" onclick="playTrack(4)">
                   <div class="track-left">
                     <span class="track-num">4</span>
-                    <span class="track-name-text">Em Là Không Thể (Chốn Tìm Show)</span>
+                    <span class="track-name-text">Em Là Không Thể</span>
                   </div>
-                  <span>•••</span>
                 </div>
               </div>
 
               <audio id="custom-audio-player" preload="auto" style="display:none;"></audio>
 
-              <!-- Floating Mini Player -->
+              <!-- Mini player -->
               <div class="floating-mini-player">
                 <div class="mini-player-left">
                   <div class="mini-thumb">
-                    <img src="images/eyewear_fashion_cover.jpg" alt="Mini Cover">
+                    <img src="images/eyewear_fashion_cover.jpg" alt="" onerror="this.parentElement.style.background='linear-gradient(135deg,#0EA5E9,#0284C7)'">
                   </div>
                   <div class="mini-meta">
                     <div class="mini-title">Nothing's Gonna Change My Love For You</div>
-                    <div class="mini-artist">Eyewear Fashion Lounge</div>
+                    <div class="mini-artist">Fashion Lounge</div>
                   </div>
                 </div>
-
                 <div class="mini-controls">
                   <span id="mini-play-btn" onclick="toggleAudioPlay()">▶</span>
                   <span onclick="playNextTrack()">⏭</span>
@@ -3445,7 +3238,7 @@
     <!-- ====================================================================
          CỘT NGOÀI PHẢI: DÙNG TRONG CHẾ ĐỘ GẬP (FOLDED)
          ==================================================================== -->
-    <section class="col-right-panel mobile-hidden" id="col-right-panel">
+    <section class="col-right-panel" id="col-right-panel">
       <div class="ext-grid-slot" id="ext-grid-slot">
         <!-- Khung Tất Cả Kính & Ô Tìm Kiếm -->
         <div class="grid-panel-container" id="glasses-grid-node">
@@ -3461,11 +3254,6 @@
             </div>
           </div>
 
-          <!-- Quick Category Filter Bar for Mobile / Grid -->
-          <div class="grid-cat-scroll-wrap" id="grid-cat-scroll-wrap">
-            <div class="cat-btn-group" id="grid-cat-btn-group"></div>
-          </div>
-
           <!-- App Grid of Squircles with PURE WHITE BACKGROUND -->
           <div class="squircle-app-grid" id="squircle-app-grid">
             <!-- Rendered dynamically -->
@@ -3475,6 +3263,9 @@
     </section>
 
   </main>
+
+  <!-- Mobile: thanh chọn kính ngang mép dưới -->
+  <div class="mobile-glass-strip" id="mobile-glass-strip" aria-label="Chọn mẫu kính"></div>
 
   <!-- ====================================================================
        4. FLOATING LIQUID DOCK WITH OFFICIAL BRAND LOGOS
@@ -3492,47 +3283,59 @@
         <div class="dock-active-dot"></div>
       </div>
 
-      <!-- Puma (Official Puma Leaping Cat SVG) -->
+      <!-- Puma -->
       <div class="dock-brand-item" id="dock-puma" onclick="filterBrand('Puma')">
         <div class="dock-tooltip">Puma Eyewear</div>
         <div class="dock-icon-box bg-puma">
-          <img src="images/puma_logo.svg" alt="Puma Logo" style="filter: brightness(0) invert(1);">
+          <svg viewBox="0 0 48 48" width="28" height="28" fill="#ffffff" aria-label="Puma">
+            <path d="M6 32c2-8 8-16 18-20 2 6 1 12-2 16 6-2 12-1 16 4-8 2-16 4-24 6-4-2-6-4-8-6z"/>
+            <path d="M22 14c4 2 8 6 10 12-4-1-8 0-12 2 0-5 0-10 2-14z" opacity="0.85"/>
+          </svg>
         </div>
         <div class="dock-active-dot"></div>
       </div>
 
-      <!-- Calvin Klein (Official CK Logo SVG) -->
+      <!-- Calvin Klein -->
       <div class="dock-brand-item" id="dock-ck" onclick="filterBrand('CK')">
         <div class="dock-tooltip">Calvin Klein (CK)</div>
         <div class="dock-icon-box bg-ck">
-          <img src="images/ck_logo.svg" alt="Calvin Klein Logo">
+          <svg viewBox="0 0 48 48" width="30" height="30" aria-label="Calvin Klein">
+            <text x="24" y="31" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#111">CK</text>
+          </svg>
         </div>
         <div class="dock-active-dot"></div>
       </div>
 
-      <!-- Montblanc (Official Montblanc Logo SVG) -->
+      <!-- Montblanc -->
       <div class="dock-brand-item" id="dock-montblanc" onclick="filterBrand('Montblanc')">
         <div class="dock-tooltip">Montblanc</div>
         <div class="dock-icon-box bg-montblanc">
-          <img src="images/montblanc_logo.svg" alt="Montblanc Logo">
+          <svg viewBox="0 0 48 48" width="26" height="26" fill="#ffffff" aria-label="Montblanc">
+            <path d="M24 6l2.4 7.4H34l-6 4.4 2.3 7.2L24 20.6l-6.3 4.4 2.3-7.2-6-4.4h7.6z"/>
+            <circle cx="24" cy="36" r="3" fill="#fff"/>
+          </svg>
         </div>
         <div class="dock-active-dot"></div>
       </div>
 
-      <!-- Cartier (Official Cartier Logo SVG) -->
+      <!-- Cartier -->
       <div class="dock-brand-item" id="dock-cartier" onclick="filterBrand('Cartier')">
         <div class="dock-tooltip">Cartier</div>
         <div class="dock-icon-box bg-cartier">
-          <img src="images/cartier_logo.svg" alt="Cartier Logo">
+          <svg viewBox="0 0 64 48" width="34" height="26" aria-label="Cartier">
+            <text x="32" y="30" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="14" font-weight="600" fill="#F5E6C8" letter-spacing="1">Cartier</text>
+          </svg>
         </div>
         <div class="dock-active-dot"></div>
       </div>
 
-      <!-- Ray-Ban (Official Ray-Ban Logo SVG) -->
+      <!-- Ray-Ban -->
       <div class="dock-brand-item" id="dock-rayban" onclick="filterBrand('Rayban')">
         <div class="dock-tooltip">Ray-Ban</div>
         <div class="dock-icon-box bg-rayban">
-          <img src="images/rayban_logo.svg" alt="Ray-Ban Logo">
+          <svg viewBox="0 0 64 48" width="34" height="26" aria-label="Ray-Ban">
+            <text x="32" y="30" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">RAY-BAN</text>
+          </svg>
         </div>
         <div class="dock-active-dot"></div>
       </div>
@@ -4137,10 +3940,8 @@ function doPost(e) {
       const albumTags = document.querySelector('.album-format-tags');
       const uploadLabel = document.getElementById('upload-music-label');
 
-      if (albumTitle) albumTitle.innerText = customTracks[0].name.toUpperCase();
-      if (albumArtist) albumArtist.innerText = `ALBUM CỦA BẠN (${customTracks.length} BÀI)`;
-      if (albumTags) albumTags.innerText = `Lossless Audio • Tệp Máy Tính • SR89 Studio`;
-      if (uploadLabel) uploadLabel.innerText = `✓ Đã nạp ${customTracks.length} bài`;
+      if (albumTitle) albumTitle.innerText = customTracks[0].name;
+      if (albumArtist) albumArtist.innerText = `${customTracks.length} bài • Album của bạn`;
 
       renderCustomTracklist();
       playTrack(1);
@@ -4151,8 +3952,13 @@ function doPost(e) {
       if (!file) return;
       const url = URL.createObjectURL(file);
       const coverImg = document.getElementById('music-cover-img');
+      const hero = document.getElementById('music-art-hero');
       const miniThumb = document.querySelector('.mini-thumb img');
-      if (coverImg) coverImg.src = url;
+      if (coverImg) {
+        coverImg.src = url;
+        coverImg.style.display = 'block';
+      }
+      if (hero) hero.classList.add('has-custom-cover');
       if (miniThumb) miniThumb.src = url;
     }
 
@@ -4176,7 +3982,6 @@ function doPost(e) {
             </div>
             <span class="track-name-text">${track.name}</span>
           </div>
-          <span>•••</span>
         `;
         listEl.appendChild(row);
       });
@@ -4209,7 +4014,7 @@ function doPost(e) {
       if (audio.paused) {
         audio.play().then(() => {
           isPlayingAudio = true;
-          if (heroPlayText) heroPlayText.innerText = 'Tạm Dừng';
+          if (heroPlayText) heroPlayText.innerText = 'Dừng';
           if (heroPlayIcon) heroPlayIcon.innerText = '⏸';
           if (miniPlayBtn) miniPlayBtn.innerText = '⏸';
           const curTrack = customTracks[currentTrackIndex - 1] || customTracks[0];
@@ -4226,7 +4031,7 @@ function doPost(e) {
       } else {
         audio.pause();
         isPlayingAudio = false;
-        if (heroPlayText) heroPlayText.innerText = 'Phát Nhạc';
+        if (heroPlayText) heroPlayText.innerText = 'Phát';
         if (heroPlayIcon) heroPlayIcon.innerText = '▶';
         if (miniPlayBtn) miniPlayBtn.innerText = '▶';
         updateEqDisplay(false);
@@ -4264,7 +4069,7 @@ function doPost(e) {
         audio.src = customTracks[num - 1].url;
         audio.play().then(() => {
           isPlayingAudio = true;
-          if (heroPlayText) heroPlayText.innerText = 'Tạm Dừng';
+          if (heroPlayText) heroPlayText.innerText = 'Dừng';
           if (heroPlayIcon) heroPlayIcon.innerText = '⏸';
           if (miniPlayBtn) miniPlayBtn.innerText = '⏸';
           if (miniTitle) miniTitle.innerText = customTracks[num - 1].name;
@@ -4424,7 +4229,7 @@ function doPost(e) {
         card.onclick = () => {
           selectGlass(globalIdx);
           toggleScreenMode('ar');
-          if (window.innerWidth <= 768) {
+          if (window.innerWidth <= 680) {
             switchMobileTab('device');
           }
         };
@@ -4448,6 +4253,31 @@ function doPost(e) {
 
         grid.appendChild(card);
       });
+
+      renderMobileGlassStrip();
+    }
+
+    function renderMobileGlassStrip() {
+      const strip = document.getElementById('mobile-glass-strip');
+      if (!strip) return;
+
+      const filtered = PRODUCTS.filter(p => {
+        if (currentBrandFilter !== 'all' && p.brand !== currentBrandFilter) return false;
+        if (currentCategoryFilter !== 'all' && p.category !== currentCategoryFilter) return false;
+        return true;
+      });
+
+      strip.innerHTML = filtered.map((item) => {
+        const globalIdx = PRODUCTS.findIndex(p => p.id === item.id);
+        const isSelected = globalIdx === selectedGlassIndex;
+        const imgSrc = formatDriveUrl(item.actualPhoto || item.src);
+        return `
+          <div class="mobile-glass-chip ${isSelected ? 'selected' : ''}" data-id="${item.id}" onclick="selectGlass(${globalIdx}); toggleScreenMode('ar');">
+            <img src="${imgSrc}" alt="${item.name}" onerror="this.src='Rayban.png'">
+            <span>${item.name}</span>
+          </div>
+        `;
+      }).join('');
     }
 
     function selectGlass(index) {
@@ -4478,6 +4308,9 @@ function doPost(e) {
       document.querySelectorAll('.glass-app-item').forEach(el => {
         if (el.getAttribute('data-id') === glass.id) el.classList.add('selected');
         else el.classList.remove('selected');
+      });
+      document.querySelectorAll('.mobile-glass-chip').forEach(el => {
+        el.classList.toggle('selected', el.getAttribute('data-id') === glass.id);
       });
 
       updateAiStyling();
@@ -4538,10 +4371,6 @@ function doPost(e) {
     // D2. CHUYỂN ĐỔI CHẾ ĐỘ IPHONE DUO: MỞ NGANG DUAL-SCREEN VS GẬP COVER SCREEN
     // --------------------------------------------------------------------------
     function setDuoMode(mode) {
-      // Trên điện thoại (<= 768px), luôn khóa giao diện Duo khi gập theo yêu cầu
-      if (window.innerWidth <= 768) {
-        mode = 'folded';
-      }
       currentDuoMode = mode;
       const workspace = document.getElementById('app-workspace');
       const weatherNode = document.getElementById('weather-widget-node');
@@ -4616,16 +4445,6 @@ function doPost(e) {
     }
 
     function toggleDuoFoldMode() {
-      if (window.innerWidth <= 768) {
-        // Trên điện thoại, luôn giữ chế độ gập, chuyển đổi nhanh giữa AR và Danh mục
-        const colCenter = document.getElementById('col-center-panel');
-        if (colCenter && !colCenter.classList.contains('mobile-hidden')) {
-          switchMobileTab('grid');
-        } else {
-          switchMobileTab('device');
-        }
-        return;
-      }
       if (currentDuoMode === 'unfolded') {
         setDuoMode('folded');
       } else {
@@ -4653,21 +4472,12 @@ function doPost(e) {
         const deltaY = touchEndY - touchStartY;
 
         if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.1) {
-          if (window.innerWidth <= 768) {
-            // Trên điện thoại: Gạt trái chuyển sang Danh Mục Kính, Gạt phải về Gương AR
-            if (deltaX < 0) {
-              switchMobileTab('grid');
-            } else {
-              switchMobileTab('device');
-            }
+          if (deltaX < 0) {
+            // Gạt trái -> Gập lại Cover
+            setDuoMode('folded');
           } else {
-            if (deltaX < 0) {
-              // Gạt trái -> Gập lại Cover
-              setDuoMode('folded');
-            } else {
-              // Gạt phải -> Mở ngang Dual-Screen
-              setDuoMode('unfolded');
-            }
+            // Gạt phải -> Mở ngang Dual-Screen
+            setDuoMode('unfolded');
           }
         }
       }, { passive: true });
@@ -4686,55 +4496,33 @@ function doPost(e) {
         isMouseDown = false;
         const deltaX = e.clientX - mouseStartX;
         if (Math.abs(deltaX) > 65) {
-          if (window.innerWidth <= 768) {
-            if (deltaX < 0) {
-              switchMobileTab('grid');
-            } else {
-              switchMobileTab('device');
-            }
+          if (deltaX < 0) {
+            setDuoMode('folded');
           } else {
-            if (deltaX < 0) {
-              setDuoMode('folded');
-            } else {
-              setDuoMode('unfolded');
-            }
+            setDuoMode('unfolded');
           }
         }
       });
     }
 
-    // Mobile screen switcher (chuyển đổi tab trên điện thoại <= 768px: Gương AR / Danh mục / Thời tiết)
+    // Mobile screen switcher (chuyển đổi tab trên điện thoại)
+    // Mobile screen switcher (chuyển đổi tab trên điện thoại <= 680px)
     function switchMobileTab(tab) {
       const colCenter = document.getElementById('col-center-panel');
       const colRight = document.getElementById('col-right-panel');
-      const colLeft = document.getElementById('col-left-panel');
       const btnDev = document.getElementById('btn-tab-device');
       const btnGrid = document.getElementById('btn-tab-grid');
-      const btnWeather = document.getElementById('btn-tab-weather');
-
-      // Ẩn tất cả các cột trên mobile
-      if (colCenter) colCenter.classList.add('mobile-hidden');
-      if (colRight) colRight.classList.add('mobile-hidden');
-      if (colLeft) colLeft.classList.add('mobile-hidden');
-
-      if (btnDev) btnDev.classList.remove('active');
-      if (btnGrid) btnGrid.classList.remove('active');
-      if (btnWeather) btnWeather.classList.remove('active');
 
       if (tab === 'device') {
         if (colCenter) colCenter.classList.remove('mobile-hidden');
+        if (colRight) colRight.classList.add('mobile-hidden');
         if (btnDev) btnDev.classList.add('active');
-        // Kích hoạt cập nhật khung canvas AR
-        setTimeout(() => {
-          updateCanvasDimensions();
-          resetCenterStage();
-        }, 50);
-      } else if (tab === 'weather') {
-        if (colLeft) colLeft.classList.remove('mobile-hidden');
-        if (btnWeather) btnWeather.classList.add('active');
+        if (btnGrid) btnGrid.classList.remove('active');
       } else {
+        if (colCenter) colCenter.classList.add('mobile-hidden');
         if (colRight) colRight.classList.remove('mobile-hidden');
         if (btnGrid) btnGrid.classList.add('active');
+        if (btnDev) btnDev.classList.remove('active');
       }
     }
 
@@ -5615,6 +5403,9 @@ function doPost(e) {
         const chin = landmarks[152];
         const forehead = landmarks[10];
 
+        // Phân tích tỉ lệ khuôn mặt → AI gợi ý độ hợp kính
+        updateFaceMetricsFromLandmarks(landmarks, vW, vH);
+
         // Tọa độ tâm mặt trong video
         const faceX = nose.x * vW;
         const faceY = nose.y * vH;
@@ -5845,21 +5636,78 @@ function doPost(e) {
       }
     }
 
+    // Tỉ lệ khuôn mặt từ MediaPipe (cập nhật mỗi frame khi có face)
+    let lastFaceMetrics = { ratio: 1.3, shape: 'oval', ready: false };
+
+    function classifyFaceShape(widthHeightRatio) {
+      // ratio = faceWidth / faceHeight
+      // < 0.85: dài · 0.85–1.05: oval · 1.05–1.25: tròn · > 1.25: vuông/rộng
+      if (widthHeightRatio < 0.88) return 'long';
+      if (widthHeightRatio < 1.08) return 'oval';
+      if (widthHeightRatio < 1.28) return 'round';
+      return 'square';
+    }
+
+    const FACE_SHAPE_LABEL = {
+      long: 'Mặt Dài',
+      oval: 'Mặt Oval',
+      round: 'Mặt Tròn',
+      square: 'Mặt Vuông'
+    };
+
+    // Gọng phù hợp theo hình mặt (nguyên tắc styling cơ bản)
+    const BEST_FRAMES = {
+      long: ['square', 'aviator'],
+      oval: ['square', 'round', 'oval', 'aviator'],
+      round: ['square', 'aviator'],
+      square: ['round', 'oval', 'aviator']
+    };
+    const FRAME_ADVICE = {
+      long: 'Nên chọn gọng vuông hoặc aviator để cân tỉ lệ',
+      oval: 'Hầu hết gọng đều hợp — ưu tiên form bạn thích',
+      round: 'Nên chọn gọng vuông / chữ nhật để cân mặt',
+      square: 'Nên chọn gọng tròn hoặc oval để mềm góc'
+    };
+
+    function scoreGlassForFace(glassType, faceShape) {
+      const t = (glassType || 'square').toLowerCase();
+      const best = BEST_FRAMES[faceShape] || BEST_FRAMES.oval;
+      if (best[0] === t) return 96 + Math.floor(Math.random() * 3);
+      if (best.includes(t)) return 88 + Math.floor(Math.random() * 6);
+      // Oval face tolerates more
+      if (faceShape === 'oval') return 82 + Math.floor(Math.random() * 8);
+      return 68 + Math.floor(Math.random() * 12);
+    }
+
     function updateAiStyling() {
       const activeData = PRODUCTS[selectedGlassIndex] || PRODUCTS[0];
       const badge = document.getElementById('ai-face-badge-pill');
       if (!badge) return;
 
-      const type = (activeData.type || 'square').toLowerCase();
-      let shape = 'Mặt Trái Xoan';
-      let score = '98% Cực hợp';
+      const faceShape = lastFaceMetrics.ready ? lastFaceMetrics.shape : 'oval';
+      const shapeLabel = FACE_SHAPE_LABEL[faceShape] || 'Mặt Oval';
+      const score = scoreGlassForFace(activeData.type, faceShape);
+      const advice = FRAME_ADVICE[faceShape] || '';
+      const matchLabel = score >= 90 ? 'Rất hợp' : (score >= 80 ? 'Hợp' : 'Tạm được');
 
-      if (type === 'square') { shape = 'Mặt Tròn'; score = '97% Tôn dáng'; }
-      else if (type === 'round') { shape = 'Mặt Vuông'; score = '98% Cân bằng'; }
-      else if (type === 'oval') { shape = 'Mặt Kim Cương'; score = '95% Thanh tú'; }
-      else if (type === 'aviator') { shape = 'Mặt Dài'; score = '99% Phong trần'; }
+      badge.innerHTML = `<span>✨ ${shapeLabel} · ${score}% ${matchLabel}</span>`;
+      badge.title = advice;
+    }
 
-      badge.innerText = `✨ ${shape} • ${score}`;
+    function updateFaceMetricsFromLandmarks(landmarks, vW, vH) {
+      try {
+        const leftCheek = landmarks[234];
+        const rightCheek = landmarks[454];
+        const chin = landmarks[152];
+        const forehead = landmarks[10];
+        const faceW = Math.hypot((rightCheek.x - leftCheek.x) * vW, (rightCheek.y - leftCheek.y) * vH);
+        const faceH = Math.hypot((chin.x - forehead.x) * vW, (chin.y - forehead.y) * vH);
+        const ratio = faceW / (faceH || 1);
+        const shape = classifyFaceShape(ratio);
+        const changed = !lastFaceMetrics.ready || lastFaceMetrics.shape !== shape;
+        lastFaceMetrics = { ratio, shape, ready: true };
+        if (changed) updateAiStyling();
+      } catch (e) {}
     }
 
     // --------------------------------------------------------------------------
@@ -5987,6 +5835,18 @@ function doPost(e) {
     // --------------------------------------------------------------------------
     // H. KHỞI TẠO HỆ THỐNG
     // --------------------------------------------------------------------------
+    function isMobileViewport() {
+      return window.innerWidth <= 680;
+    }
+
+    function applyResponsiveDuoMode() {
+      if (isMobileViewport()) {
+        setDuoMode('folded');
+      } else if (currentDuoMode !== 'unfolded' && currentDuoMode !== 'folded') {
+        setDuoMode('unfolded');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       updateLiveClock();
       setInterval(updateLiveClock, 1000);
@@ -5995,25 +5855,15 @@ function doPost(e) {
       renderAppGrid();
       selectGlass(0);
       initSwipeGestures();
-
-      // Kiểm tra thiết bị truy cập: Trên điện thoại (<= 768px), chỉ mở giao diện Duo khi gập
-      const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-      if (isMobile) {
-        setDuoMode('folded');
-        switchMobileTab('device');
-      } else {
-        setDuoMode('unfolded'); // Ban đầu trên Desktop mở ngang Duo 2 màn hình chuẩn tỉ lệ
-      }
-
+      // Desktop: mở ngang · Mobile: chỉ giao diện gập
+      setDuoMode(isMobileViewport() ? 'folded' : 'unfolded');
       syncGoogleSheets(false);
       toggleScreenMode('music');
 
       window.addEventListener('resize', () => {
-        if (window.innerWidth <= 768 && currentDuoMode !== 'folded') {
-          setDuoMode('folded');
-        }
         updateCanvasDimensions();
         resetCenterStage();
+        applyResponsiveDuoMode();
       });
     });
   </script>
